@@ -1,2 +1,6 @@
 context/images/
 context/audio/
+.DS_Store
+*.egg-info/
+__pycache__/
+.env

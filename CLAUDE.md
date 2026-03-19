@@ -23,6 +23,9 @@ eas build --profile development-simulator --platform ios
 
 ## Commands Backend
 
-
+- **Activate virtualenv**: `workon freshly-picked`
+- **Run dev server**: `cd backend && uvicorn app.main:app --reload --port 8000`
+- **Health check**: `curl http://localhost:8000/api/v1/health`
+- **Install dependencies**: `pip install -e ".[dev]"`
 
 **IMPORTANT:** DO NOT ADD A REFERENCE TO Claude in any commit messages
