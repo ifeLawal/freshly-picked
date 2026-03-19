@@ -27,5 +27,8 @@ eas build --profile development-simulator --platform ios
 - **Run dev server**: `cd backend && uvicorn app.main:app --reload --port 8000`
 - **Health check**: `curl http://localhost:8000/api/v1/health`
 - **Install dependencies**: `pip install -e ".[dev]"`
+- **New migration**: `cd backend && alembic revision --autogenerate -m "<description>"`
+- **Run migrations**: `cd backend && alembic upgrade head`
+- **Rollback migration**: `cd backend && alembic downgrade -1`
 
 **IMPORTANT:** DO NOT ADD A REFERENCE TO Claude in any commit messages

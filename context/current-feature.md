@@ -21,3 +21,4 @@ Not Started
 <!-- Keep this updated. Earliest to latest -->
 
 - 2026-03-19: Backend setup — FastAPI project with layered structure, pyproject.toml, config module, and `/health` endpoint (`sprint-01-foundation/01_backend_setup.md`)
+- 2026-03-19: Database setup — Neon Postgres connected, SQLModel engine, Alembic initialized with async env.py, first migration confirmed (`sprint-01-foundation/02_database_setup.md`)
