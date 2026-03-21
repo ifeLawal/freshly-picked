@@ -4,3 +4,35 @@ context/audio/
 *.egg-info/
 __pycache__/
 .env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# Credentials & certificates
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+
+# Dependencies
+mobile/node_modules/
+
+# Mobile — Expo
+mobile/.expo/
+mobile/web-build/
+mobile/dist/
+mobile/expo-env.d.ts
+mobile/.easignore
+mobile/.metro-health-check*
+
+# Mobile — Native
+mobile/android/
+mobile/ios/build/
+mobile/ios/Pods/
+mobile/ios/Podfile.lock
