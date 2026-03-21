@@ -30,5 +30,9 @@ eas build --profile development-simulator --platform ios
 - **New migration**: `cd backend && alembic revision --autogenerate -m "<description>"`
 - **Run migrations**: `cd backend && alembic upgrade head`
 - **Rollback migration**: `cd backend && alembic downgrade -1`
+- **Run ingestion (dry run)**: `cd backend && freshly-ingest <path-to-json> --dry-run`
+  - Example: `freshly-ingest ../context/data/harvard_after_hours_picks.json --dry-run`
+- **Run ingestion**: `cd backend && freshly-ingest <path-to-json>`
+  - Example: `freshly-ingest ../context/data/harvard_after_hours_picks.json`
 
 **IMPORTANT:** DO NOT ADD A REFERENCE TO Claude in any commit messages

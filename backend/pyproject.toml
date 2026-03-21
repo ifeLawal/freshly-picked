@@ -25,6 +25,9 @@ dev = [
     "httpx==0.27.2",
 ]
 
+[project.scripts]
+freshly-ingest = "app.ingestion.cli:main"
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["app*"]

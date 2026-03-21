@@ -88,7 +88,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 7 – Episode 9 “The Stories of 2023” on Dec 20, 2023."
   },
   {
-    "recommendation_type": "LOCATION",
+    "recommendation_type": "OTHER",
     "recommendation_name": "McNally Jackson Bookstore",
     "recommendation_link": "https://www.mcnallyjackson.com/",
     "recommended_by": "Mihir",
@@ -99,7 +99,7 @@
     "raw_pick_content": "Mentioned by Mihir on Season 7 – Episode 9 “The Stories of 2023” on Dec 20, 2023."
   },
   {
-    "recommendation_type": "LOCATION",
+    "recommendation_type": "OTHER",
     "recommendation_name": "Moma Design Store",
     "recommendation_link": "https://store.moma.org/?gad_source=1&gclid=CjwKCAiAvoqsBhB9EiwA9XTWGZub55xklcBvzE8lnt2cj3p53aNOMRsb6-c6Ue-QcFa7dEw9qvTbSRoC460QAvD_BwE",
     "recommended_by": "Mihir",
@@ -176,7 +176,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 7 – Episode 4 “Does AI Have a Copyright Problem?” on Nov 15, 2023."
   },
   {
-    "recommendation_type": "PEOPLE",
+    "recommendation_type": "OTHER",
     "recommendation_name": "Atsuko Okatsuka",
     "recommendation_link": "https://atsukocomedy.com/",
     "recommended_by": "Felix",
@@ -198,7 +198,7 @@
     "raw_pick_content": "Mentioned by Sarah Green Carmichael on Season 7 – Episode 3 “House Music” on Nov 8, 2023."
   },
   {
-    "recommendation_type": "Too Research",
+    "recommendation_type": "MOVIE",
     "recommendation_name": "Stop Making Sense",
     "recommendation_link": "https://a24films.com/films/stop-making-sense",
     "recommended_by": "Mihir",
@@ -253,7 +253,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 7 – Episode 2 “The U.S. economy is stellar. So why are we all so mad?” on Nov 1, 2023."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "RESTAURANT",
     "recommendation_name": "Fortitude Bakehouse",
     "recommendation_link": "https://www.fortitudebakehouse.com/",
     "recommended_by": "Mihir",
@@ -264,7 +264,7 @@
     "raw_pick_content": "Mentioned by Mihir on Season 7 – Episode 2 “The U.S. economy is stellar. So why are we all so mad?” on Nov 1, 2023."
   },
   {
-    "recommendation_type": "GAME",
+    "recommendation_type": "OTHER",
     "recommendation_name": "Connections by New York Times",
     "recommendation_link": "https://www.nytimes.com/games/connections",
     "recommended_by": "Mihir",
@@ -319,7 +319,7 @@
     "raw_pick_content": "Mentioned by Mihir on Season 6 – Episode 38 “Going out with a bang: Recommendations for this summer” on Jun 28, 2023."
   },
   {
-    "recommendation_type": "ACITIVITY",
+    "recommendation_type": "OTHER",
     "recommendation_name": "Sneaker Shop after a Foot Scan with Fleet Feet",
     "recommendation_link": "https://www.fleetfeet.com/",
     "recommended_by": "Mihir",
@@ -330,7 +330,7 @@
     "raw_pick_content": "Mentioned by Mihir on Season 6 – Episode 38 “Going out with a bang: Recommendations for this summer” on Jun 28, 2023."
   },
   {
-    "recommendation_type": "ACITIVITY",
+    "recommendation_type": "APP",
     "recommendation_name": "Plant Identifying with PlantNet",
     "recommendation_link": "https://apps.apple.com/us/app/plantnet/id600547573",
     "recommended_by": "Felix",
@@ -341,7 +341,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 6 – Episode 38 “Going out with a bang: Recommendations for this summer” on Jun 28, 2023."
   },
   {
-    "recommendation_type": "ACITIVITY",
+    "recommendation_type": "OTHER",
     "recommendation_name": "Birdwatching with a Bird Buddy",
     "recommendation_link": "https://mybirdbuddy.com/",
     "recommended_by": "Youngme",
@@ -352,7 +352,7 @@
     "raw_pick_content": "Mentioned by Youngme on Season 6 – Episode 38 “Going out with a bang: Recommendations for this summer” on Jun 28, 2023."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "RESTAURANT",
     "recommendation_name": "Visit Night Markets in NYC",
     "recommendation_link": "https://harvardafterhours.com/our-picks/Visit%20Night%20Markets%20in%20NYC",
     "recommended_by": "Youngme",
@@ -363,7 +363,7 @@
     "raw_pick_content": "Mentioned by Youngme on Season 6 – Episode 38 “Going out with a bang: Recommendations for this summer” on Jun 28, 2023."
   },
   {
-    "recommendation_type": "PRODUCT",
+    "recommendation_type": "OTHER",
     "recommendation_name": "Laundry Strips",
     "recommendation_link": "https://www.tru.earth/",
     "recommended_by": "Felix",
@@ -374,7 +374,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 6 – Episode 38 “Going out with a bang: Recommendations for this summer” on Jun 28, 2023."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Rhubarb",
     "recommendation_link": "https://www.epicurious.com/ingredients/rhubarb-sweet-savory-recipes-gallery",
     "recommended_by": "Mihir",
@@ -385,7 +385,7 @@
     "raw_pick_content": "Mentioned by Mihir on Season 6 – Episode 38 “Going out with a bang: Recommendations for this summer” on Jun 28, 2023."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Patagonia Tin Fish",
     "recommendation_link": "https://harvardafterhours.com/our-picks/Patagonia%20Tin%20Fish",
     "recommended_by": "Youngme",
@@ -396,7 +396,7 @@
     "raw_pick_content": "Mentioned by Youngme on Season 6 – Episode 38 “Going out with a bang: Recommendations for this summer” on Jun 28, 2023."
   },
   {
-    "recommendation_type": "DRINK",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Spicy Margaritas from Momofuku",
     "recommendation_link": "https://harvardafterhours.com/our-picks/Spicy%20Margaritas%20from%20Momofuku",
     "recommended_by": "Mihir",
@@ -407,7 +407,7 @@
     "raw_pick_content": "Mentioned by Mihir on Season 6 – Episode 38 “Going out with a bang: Recommendations for this summer” on Jun 28, 2023."
   },
   {
-    "recommendation_type": "DRINK",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Anise Drinks",
     "recommendation_link": "https://www.wineenthusiast.com/culture/anise-spirit-guide/",
     "recommended_by": "Felix",
@@ -451,7 +451,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 6 – Episode 38 “Going out with a bang: Recommendations for this summer” on Jun 28, 2023."
   },
   {
-    "recommendation_type": "Too Research",
+    "recommendation_type": "BOOK",
     "recommendation_name": "Impossible Owls: Essays from the End of the Earth by Brian Phillips",
     "recommendation_link": "https://www.amazon.com/Impossible-Owls-Essays-Ends-Earth/dp/1474607837",
     "recommended_by": "Youngme",
@@ -572,7 +572,7 @@
     "raw_pick_content": "Mentioned by Mihir on Season 6 – Episode 38 “Going out with a bang: Recommendations for this summer” on Jun 28, 2023."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Tres Leches",
     "recommendation_link": "https://www.thrillist.com/eat/nation/how-to-make-traditional-tres-leches-cake-recipe",
     "recommended_by": "Mihir",
@@ -583,7 +583,7 @@
     "raw_pick_content": "Mentioned by Mihir on Season 6 – Episode 36 “The Portfolio Life: Being Productive and Happy” on Jun 14, 2023."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Nerds Gummy Clusters",
     "recommendation_link": "https://www.nerdscandy.com/crunchy-gummy-yummy",
     "recommended_by": "Mihir",
@@ -594,7 +594,7 @@
     "raw_pick_content": "Mentioned by Mihir on Season 6 – Episode 36 “The Portfolio Life: Being Productive and Happy” on Jun 14, 2023."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Cretors: Carmel and Cheese Popcorn",
     "recommendation_link": "https://www.ghcretors.com/products/cheese-caramel-mix",
     "recommended_by": "Christina Wallace",
@@ -605,7 +605,7 @@
     "raw_pick_content": "Mentioned by Christina Wallace on Season 6 – Episode 36 “The Portfolio Life: Being Productive and Happy” on Jun 14, 2023."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Firehook Crackers",
     "recommendation_link": "http://mediterraneancrackers.com/",
     "recommended_by": "Felix",
@@ -748,7 +748,7 @@
     "raw_pick_content": "Mentioned by Mihir on Season 6 – Episode 33 “Strike in Hollywood” on May 17, 2023."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Jollof Rice",
     "recommendation_link": "https://cooking.nytimes.com/recipes/1020288-jollof-rice?smid=yt-nytfood&smtyp=cur",
     "recommended_by": "Felix",
@@ -825,7 +825,7 @@
     "raw_pick_content": "Mentioned by Mihir on Season 6 – Episode 31 “Better Ways to Say Thank You” on May 3, 2023."
   },
   {
-    "recommendation_type": "SOCIAL MEDIA",
+    "recommendation_type": "OTHER",
     "recommendation_name": "Rachel Woods: The AI Exchange",
     "recommendation_link": "https://www.tiktok.com/@the.rachel.woods",
     "recommended_by": "Felix",
@@ -935,7 +935,7 @@
     "raw_pick_content": "Mentioned by Mihir on Season 6 – Episode 28 “The Renaissance of Barnes & Noble and Dark Ages for Commercial Real Estate?” on Apr 12, 2023."
   },
   {
-    "recommendation_type": "RECIPE",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Persian-Spiced Lamb Shanks By David Tanis",
     "recommendation_link": "https://cooking.nytimes.com/recipes/1016943-persian-spiced-lamb-shanks",
     "recommended_by": "Felix",
@@ -1089,7 +1089,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 6 – Episode 24 “Primary Care Acquisitions and Wage Compression” on Mar 15, 2023."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Cadbury Creme Eggs",
     "recommendation_link": "https://www.cadburyusa.com/products/cadbury-creme-egg-1-2-oz.html",
     "recommended_by": "Mihir",
@@ -1122,7 +1122,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 6 – Episode 23 “Finally-- A Clinically-Proven Way to Lose Weight. Now what?” on Mar 8, 2023."
   },
   {
-    "recommendation_type": "FOOD IN NEW YORK CITY",
+    "recommendation_type": "RESTAURANT",
     "recommendation_name": "Mah-Ze-Dahr Bakery",
     "recommendation_link": "https://mahzedahrbakery.com/",
     "recommended_by": "Charlotte Howard",
@@ -1188,7 +1188,7 @@
     "raw_pick_content": "Mentioned by Mihir on Season 6 – Episode 22 “The Promise and Peril of AI” on Mar 1, 2023."
   },
   {
-    "recommendation_type": "PRODUCT",
+    "recommendation_type": "OTHER",
     "recommendation_name": "Lego Titanic",
     "recommendation_link": "https://www.lego.com/en-us/product/lego-titanic-10294",
     "recommended_by": "Mihir",
@@ -1199,7 +1199,7 @@
     "raw_pick_content": "Mentioned by Mihir on Season 6 – Episode 22 “The Promise and Peril of AI” on Mar 1, 2023."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Pastéis de Nata",
     "recommendation_link": "https://www.bonappetit.com/recipe/portuguese-egg-custard-tarts",
     "recommended_by": "Mihir",
@@ -1210,9 +1210,9 @@
     "raw_pick_content": "Mentioned by Mihir on Season 6 – Episode 21 “Turmoil in Energy Markets” on Feb 22, 2023."
   },
   {
-    "recommendation_type": "FOOD IN NEW YORK CITY",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Hokkaido Baked Cheese Tart",
-    "recommendation_link": "https://www.hokkaidobakedcheesetart.com/",
+    "recommendation_link": "https://zhangcatherine.com/hokkaido-cheese-tarts/",
     "recommended_by": "Mihir",
     "episode": "Season 6, Episode 21",
     "episode_title": "Turmoil in Energy Markets",
@@ -1221,7 +1221,7 @@
     "raw_pick_content": "Mentioned by Mihir on Season 6 – Episode 21 “Turmoil in Energy Markets” on Feb 22, 2023."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Jim Lahey’s Olive Oil Cake",
     "recommendation_link": "https://www.sullivanstreetbakery.com/books/",
     "recommended_by": "Mihir",
@@ -1353,7 +1353,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 6 – Episode 18 “The End of Google and Fruit Beetles?” on Feb 1, 2023."
   },
   {
-    "recommendation_type": "Too Research",
+    "recommendation_type": "BOOK",
     "recommendation_name": "Spare by Prince Harry The Duke of Sussex",
     "recommendation_link": "https://www.amazon.com/Spare-Prince-Harry-Duke-Sussex/dp/0593593804",
     "recommended_by": "Sarah Green Carmichael",
@@ -1397,7 +1397,7 @@
     "raw_pick_content": "Mentioned by Francis Frei on Season 6 – Episode 17 “Workplace Problems—Fixed!” on Jan 25, 2023."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Baba Ghanoush",
     "recommendation_link": "https://www.bonappetit.com/recipe/grilled-eggplant-baba-ghanoush",
     "recommended_by": "Felix",
@@ -1419,7 +1419,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 6 – Episode 16 “A Lunar New Year Special: BYD, EVs and Chinese Capital Allocation” on Jan 18, 2023."
   },
   {
-    "recommendation_type": "SOCIAL MEDIA",
+    "recommendation_type": "OTHER",
     "recommendation_name": "Cleo Abram: “Huge If True” on Tik Tok",
     "recommendation_link": "https://www.tiktok.com/@cleoabram?lang=en",
     "recommended_by": "Felix",
@@ -1540,7 +1540,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 6 – Episode 12 “China, Chips, Child Poverty & Measuring Inequality” on Dec 14, 2022."
   },
   {
-    "recommendation_type": "DRINK",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Barrell Aged Negroni",
     "recommendation_link": "https://www.foodandwine.com/recipes/aged-negroni",
     "recommended_by": "Charlotte Howard",
@@ -1551,7 +1551,7 @@
     "raw_pick_content": "Mentioned by Charlotte Howard on Season 6 – Episode 12 “China, Chips, Child Poverty & Measuring Inequality” on Dec 14, 2022."
   },
   {
-    "recommendation_type": "DRINK",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "La Bandera",
     "recommendation_link": "https://www.hornitostequila.com/cocktail-recipes/bandera/",
     "recommended_by": "Mihir",
@@ -1595,7 +1595,7 @@
     "raw_pick_content": "Mentioned by Sarah Green Carmichael on Season 6 – Episode 11 “Why Are Financial Regrets So Common?” on Dec 7, 2022."
   },
   {
-    "recommendation_type": "FOOD AND DRINK",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Cactus Ice",
     "recommendation_link": "https://www.saveur.com/cactus-ice-granita-recipe/",
     "recommended_by": "Felix",
@@ -1606,7 +1606,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 6 – Episode 10 “Holding a Global Sports Event in Qatar?” on Nov 30, 2022."
   },
   {
-    "recommendation_type": "FOOD AND DRINK",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Willie Bird Smoked Turkey",
     "recommendation_link": "https://www.williebird.com/",
     "recommended_by": "Our Guest",
@@ -1617,7 +1617,7 @@
     "raw_pick_content": "Mentioned by Our Guest on Season 6 – Episode 10 “Holding a Global Sports Event in Qatar?” on Nov 30, 2022."
   },
   {
-    "recommendation_type": "Too Research",
+    "recommendation_type": "RESTAURANT",
     "recommendation_name": "Urban Hawker",
     "recommendation_link": "https://www.urbanhawker.com/",
     "recommended_by": "Mihir",
@@ -1628,22 +1628,22 @@
     "raw_pick_content": "Mentioned by Mihir on Season 6 – Episode 10 “Holding a Global Sports Event in Qatar?” on Nov 30, 2022."
   },
   {
-    "recommendation_type": "PRODUCT",
+    "recommendation_type": "OTHER",
     "recommendation_name": "Bento Boxes",
     "recommendation_link": "https://www.amazon.com/bento-boxes/b?ie=UTF8&node=2457292011",
     "recommended_by": "Youngme",
-    "episode": null,
+    "episode": "Season 6, Episode 9.5",
     "episode_title": "The Thanksgiving Food Episode!",
     "episode_date": "Nov 24, 2022",
     "source_page_url": "https://harvardafterhours.com/our-picks/?fwp_paged=8",
     "raw_pick_content": "Mentioned by Youngme on Season 6 – Episode “The Thanksgiving Food Episode!” on Nov 24, 2022."
   },
   {
-    "recommendation_type": "FOOD AND DRINK",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "“Negorni Sbagliato with Prosecco In It”",
     "recommendation_link": "https://www.bonappetit.com/story/emma-darcy-sbagliato",
     "recommended_by": "Youngme",
-    "episode": null,
+    "episode": "Season 6, Episode 9.5",
     "episode_title": "The Thanksgiving Food Episode!",
     "episode_date": "Nov 24, 2022",
     "source_page_url": "https://harvardafterhours.com/our-picks/?fwp_paged=8",
@@ -1654,7 +1654,7 @@
     "recommendation_name": "The Hot Ones",
     "recommendation_link": "https://www.youtube.com/playlist?list=PLAzrgbu8gEMIIK3r4Se1dOZWSZzUSadfZ",
     "recommended_by": "Mihir",
-    "episode": null,
+    "episode": "Season 6, Episode 9.5",
     "episode_title": "The Thanksgiving Food Episode!",
     "episode_date": "Nov 24, 2022",
     "source_page_url": "https://harvardafterhours.com/our-picks/?fwp_paged=8",
@@ -1665,7 +1665,7 @@
     "recommendation_name": "The Wisdom of the Chinese Kitchen: Wisdom of the Chinese Kitchen by Grace Young",
     "recommendation_link": "https://www.amazon.com/Wisdom-Chinese-Kitchen-Grace-Young/dp/0684847396",
     "recommended_by": "Felix",
-    "episode": null,
+    "episode": "Season 6, Episode 9.5",
     "episode_title": "The Thanksgiving Food Episode!",
     "episode_date": "Nov 24, 2022",
     "source_page_url": "https://harvardafterhours.com/our-picks/?fwp_paged=8",
@@ -1727,7 +1727,7 @@
     "raw_pick_content": "Mentioned by Mihir on Season 6 – Episode 8 “Workplace Big Brother and Fresh Starts” on Nov 9, 2022."
   },
   {
-    "recommendation_type": "Too Research",
+    "recommendation_type": "APP",
     "recommendation_name": "Kanopy",
     "recommendation_link": "https://www.kanopy.com/en/",
     "recommended_by": "Felix",
@@ -1738,7 +1738,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 6 – Episode 8 “Workplace Big Brother and Fresh Starts” on Nov 9, 2022."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Dentyne Gum",
     "recommendation_link": "http://dentyne.com/",
     "recommended_by": "Felix",
@@ -1749,7 +1749,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 6 – Episode 7 “Who Is Afraid of Woke Capitalism?” on Nov 2, 2022."
   },
   {
-    "recommendation_type": "Too Research",
+    "recommendation_type": "OTHER",
     "recommendation_name": "Pickleball",
     "recommendation_link": "https://usapickleball.org/what-is-pickleball/",
     "recommended_by": "Dolly Chugh",
@@ -1760,7 +1760,7 @@
     "raw_pick_content": "Mentioned by Dolly Chugh on Season 6 – Episode 7 “Who Is Afraid of Woke Capitalism?” on Nov 2, 2022."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "RESTAURANT",
     "recommendation_name": "Rosetta Bakery",
     "recommendation_link": "https://www.rosettabakery.com/stores/",
     "recommended_by": "Mihir",
@@ -1859,7 +1859,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 6 – Episode 4 “Twitter under Musk and Bonds, Bonds, Bonds!” on Oct 12, 2022."
   },
   {
-    "recommendation_type": "DRINK",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "St.Germaine Liqueur",
     "recommendation_link": "https://www.stgermainliqueur.com/us/en/",
     "recommended_by": "Mihir",
@@ -2002,7 +2002,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 5 – Episode 35 “A Mega-Recommendations Episode for the Summer” on Jun 29, 2022."
   },
   {
-    "recommendation_type": "LOCATION",
+    "recommendation_type": "OTHER",
     "recommendation_name": "Utah National Parks",
     "recommendation_link": "https://www.nps.gov/state/ut/index.htm",
     "recommended_by": "Youngme",
@@ -2057,7 +2057,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 5 – Episode 34 “Are we witnessing a sharp decrease in income inequality? And: Why is Mihir watching inventory levels?” on Jun 22, 2022."
   },
   {
-    "recommendation_type": "FOOD AND DRINK",
+    "recommendation_type": "RESTAURANT",
     "recommendation_name": "La Pecora Bianca",
     "recommendation_link": "https://www.lapecorabianca.com/",
     "recommended_by": "Mihir",
@@ -2101,7 +2101,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 5 – Episode 33 “How to fix commuting and the legacy of Sheryl Sandberg” on Jun 15, 2022."
   },
   {
-    "recommendation_type": "FOOD AND DRINK",
+    "recommendation_type": "RESTAURANT",
     "recommendation_name": "Gulia",
     "recommendation_link": "https://www.giuliarestaurant.com/",
     "recommended_by": "Mihir",
@@ -2145,7 +2145,7 @@
     "raw_pick_content": "Mentioned by Youngme on Season 5 – Episode 31 “A Super-Sized Edition” on May 25, 2022."
   },
   {
-    "recommendation_type": "RECIPE",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Copykat.com",
     "recommendation_link": "https://copykat.com/",
     "recommended_by": "Felix",
@@ -2156,7 +2156,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 5 – Episode 31 “A Super-Sized Edition” on May 25, 2022."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Red Velvet",
     "recommendation_link": "https://www.delish.com/cooking/g1303/red-velvet-dessert-recipes/?slide=16",
     "recommended_by": "Mihir",
@@ -2167,7 +2167,7 @@
     "raw_pick_content": "Mentioned by Mihir on Season 5 – Episode 31 “A Super-Sized Edition” on May 25, 2022."
   },
   {
-    "recommendation_type": "RECIPE",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Supercook.com",
     "recommendation_link": "https://www.supercook.com/#/desktop",
     "recommended_by": "Felix",
@@ -2211,7 +2211,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 5 – Episode 30 “Time to Panic?” on May 18, 2022."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "RESTAURANT",
     "recommendation_name": "Taim Kitchen on Waverly Place NYC",
     "recommendation_link": "https://taimkitchen.com/",
     "recommended_by": "Charlotte Howard",
@@ -2244,7 +2244,7 @@
     "raw_pick_content": "Mentioned by Mihir on Season 5 – Episode 29 “Managing the Chip Shortage and the Future of Ride Sharing” on May 12, 2022."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Takis",
     "recommendation_link": "https://barcel-usa.com/takis",
     "recommended_by": "Mihir",
@@ -2277,7 +2277,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 5 – Episode 28 “Ring the Bell?” on May 5, 2022."
   },
   {
-    "recommendation_type": "SOCIAL MEDIA",
+    "recommendation_type": "OTHER",
     "recommendation_name": "The Devious Mind Behind Wordle",
     "recommendation_link": "https://www.youtube.com/watch?v=f1BLsjjAlB4",
     "recommended_by": "Mihir",
@@ -2497,7 +2497,7 @@
     "raw_pick_content": "Mentioned by Charlotte Howard on Season 5 – Episode 23 “Will the SEC and Disclosure Solve the Climate Crisis and Further Divide the China and the US?” on Mar 31, 2022."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Freezing Herbs",
     "recommendation_link": "https://www.hgtv.com/outdoors/gardens/garden-to-table/4-ways-to-freeze-fresh-herbs",
     "recommended_by": "Felix",
@@ -2574,17 +2574,6 @@
     "raw_pick_content": "Mentioned by Felix on Season 5 – Episode 20 “Let’s Talk About Your Salary, Shall We?” on Mar 9, 2022."
   },
   {
-    "recommendation_type": "FOOD",
-    "recommendation_name": "Zotz",
-    "recommendation_link": "https://zotzpower.com/",
-    "recommended_by": "Mihir",
-    "episode": "Season 5, Episode 19",
-    "episode_title": "Peloton, the Fitness Industry, and Microsoft's Acquisition of Activision",
-    "episode_date": "Mar 2, 2022",
-    "source_page_url": "https://harvardafterhours.com/our-picks/?fwp_paged=12",
-    "raw_pick_content": "Mentioned by Mihir on Season 5 – Episode 19 “Peloton, the Fitness Industry, and Microsoft's Acquisition of Activision” on Mar 2, 2022."
-  },
-  {
     "recommendation_type": "BOOK",
     "recommendation_name": "Winter World: The Ingenuity of Animal Survival",
     "recommendation_link": "https://www.amazon.com/Winter-World-Ingenuity-Animal-Survival/dp/0061129070",
@@ -2596,7 +2585,7 @@
     "raw_pick_content": "Mentioned by Sarah Green Carmichael on Season 5 – Episode 19 “Peloton, the Fitness Industry, and Microsoft's Acquisition of Activision” on Mar 2, 2022."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "RESTAURANT",
     "recommendation_name": "Bourke Street Bakery",
     "recommendation_link": "https://www.bourkestreetbakery.com/",
     "recommended_by": "Mihir",
@@ -2618,7 +2607,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 5 – Episode 19 “Peloton, the Fitness Industry, and Microsoft's Acquisition of Activision” on Mar 2, 2022."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Zotz",
     "recommendation_link": "https://zotzpower.com/",
     "recommended_by": "Mihir",
@@ -2750,7 +2739,7 @@
     "raw_pick_content": "Mentioned by Mihir on Season 5 – Episode 13 “Holiday Travel Headaches!” on Dec 1, 2021."
   },
   {
-    "recommendation_type": "LOYALTY PROGRAM",
+    "recommendation_type": "OTHER",
     "recommendation_name": "PassPlus by United Airlines",
     "recommendation_link": "https://united.business/passplus",
     "recommended_by": "Mihir",
@@ -2772,7 +2761,7 @@
     "raw_pick_content": "Mentioned by Mihir on Season 5 – Episode 13 “Holiday Travel Headaches!” on Dec 1, 2021."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Meringue Cookies",
     "recommendation_link": "https://sugarspunrun.com/meringue-cookie-recipe/",
     "recommended_by": "Mihir",
@@ -2794,7 +2783,7 @@
     "raw_pick_content": "Mentioned by Mihir on Season 5 – Episode 12 “The Food Episode!” on Nov 24, 2021."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Opopop",
     "recommendation_link": "https://opopop.com/",
     "recommended_by": "Youngme",
@@ -2816,7 +2805,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 5 – Episode 12 “The Food Episode!” on Nov 24, 2021."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "Dutch Baby",
     "recommendation_link": "https://cooking.nytimes.com/recipes/6648-dutch-baby",
     "recommended_by": "Mihir",
@@ -2915,7 +2904,7 @@
     "raw_pick_content": "Mentioned by Youngme on Season 3 – Episode 14 “Tabloid Edition: Fugitive Carlos Ghosn and Royal Family Drama” on Jan 15, 2020."
   },
   {
-    "recommendation_type": "PEOPLE",
+    "recommendation_type": "OTHER",
     "recommendation_name": "Federica Fragapane",
     "recommendation_link": "https://www.behance.net/FedericaFragapane",
     "recommended_by": "Felix",
@@ -3971,7 +3960,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 2 – Episode 24 “Apple’s Big Event, Plus Is Corporate Debt at a Crisis Level?” on Apr 3, 2019."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "RESTAURANT",
     "recommendation_name": "Bang Bar (New restaurant by David Chang)",
     "recommendation_link": "https://bangbar.xyz/",
     "recommended_by": "Mihir",
@@ -4202,7 +4191,7 @@
     "raw_pick_content": "Mentioned by Mihir on Season 2 – Episode 30 “Debating the Sackler Family Role in the Opioid Crisis, and Using AI Bots to Conduct Job Interviews” on May 15, 2019."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "FOOD OR DRINK",
     "recommendation_name": "“The Best Green Salad in the World” (The New York Times)",
     "recommendation_link": "https://www.nytimes.com/2019/05/08/magazine/best-green-salad-recipe.html",
     "recommended_by": "Felix",
@@ -4719,7 +4708,7 @@
     "raw_pick_content": "Mentioned by Felix on Season 1 – Episode 7 “Zuckerberg Faces Congress, and the Plight of the Post Office” on Apr 13, 2018."
   },
   {
-    "recommendation_type": "FOOD",
+    "recommendation_type": "RESTAURANT",
     "recommendation_name": "Indian Accent",
     "recommendation_link": "https://indianaccent.com/newyork/index.php",
     "recommended_by": "Mihir",
