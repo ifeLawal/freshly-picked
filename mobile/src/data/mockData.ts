@@ -50,7 +50,7 @@ export const recommendations: Recommendation[] = [
     season: 6,
     episode: 7,
     date: '2022-11-02',
-    audioUrl: require('../../assets/audio/After Hours S6 EP06 rec-1.m4a'),
+    audioUrl: require('../../assets/audio/After_Hours_S6_EP06_Dentyne_Gum.m4a'),
     duration: 100,
     imageUrl: require('../../assets/Dentyne.png'),
   },
@@ -65,7 +65,7 @@ export const recommendations: Recommendation[] = [
     season: 6,
     episode: 7,
     date: '2022-11-02',
-    audioUrl: require('../../assets/audio/After Hours S6 EP06 rec-2.m4a'),
+    audioUrl: require('../../assets/audio/After_Hours_S6_EP06_Pickleball.m4a'),
     duration: 100,
   },
   {

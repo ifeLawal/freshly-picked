@@ -13,6 +13,9 @@ This step creates the CLI entry point for importing recommendation data from JSO
 ## References
 - Project Overview: `freshly-picked-project-overview.md`
 - Relevant sections: §11 Backend Architecture, §12 Ingestion Workflow
+- @context/audio
+- @context/images
+- @context/data/harvard_after_hours_picks.json
 
 ---
 
