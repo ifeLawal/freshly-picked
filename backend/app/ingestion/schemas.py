@@ -47,6 +47,14 @@ class PickRecord(BaseModel):
             )
         return normalized
 
+    # Optional local file paths — used during ingestion to upload media to S3.
+    # Paths should be relative to the --media-dir passed to the CLI (defaults to
+    # the directory containing the JSON file).
+    image_file: Optional[str] = None
+    audio_file: Optional[str] = None
+    audio_start_seconds: Optional[int] = None
+    audio_end_seconds: Optional[int] = None
+
     @field_validator("recommendation_name", "recommended_by", "episode")
     @classmethod
     def validate_non_empty(cls, v: str) -> str:

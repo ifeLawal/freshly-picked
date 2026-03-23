@@ -27,6 +27,8 @@ dev = [
 
 [project.scripts]
 freshly-ingest = "app.ingestion.cli:main"
+freshly-cleanup = "app.ingestion.cleanup:main"
+freshly-wipe = "app.ingestion.wipe:main"
 
 [tool.setuptools.packages.find]
 where = ["."]

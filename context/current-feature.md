@@ -6,8 +6,6 @@
 
 <!-- Not Started|In Progress|Completed -->
 
-Not Started
-
 ## Goals
 
 <!-- Goals & requirements -->
@@ -26,3 +24,4 @@ Not Started
 - 2026-03-19: S3 setup done — AWS bucket, credentials, upload helper for images and audio (`sprint-01/04_s3_setup.md`)
 - 2026-03-20: Mobile Setup done — Create the react native application and screens (`05_mobile_setup.md`)
 - 2026-03-21: Ingestion CLI base done — CLI entry point, JSON loading, validation, dry-run flag (`sprint-01/06_ingestion_cli_base.md`)
+- 2026-03-22: Ingestion upsert complete — DB writes, media upload to S3, import summary, idempotent upsert via external_source_id; tag creation and linking not implemented (source JSON has no tag data) (`sprint-02/01_ingestion_upsert.md`)
