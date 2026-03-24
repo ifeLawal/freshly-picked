@@ -131,35 +131,40 @@ def _upload_media(
     if not include_media or not media_dir:
         return None, None
 
-    image_url: Optional[str] = None
-    audio_url: Optional[str] = None
+    image_url: Optional[str] = None  # will be set if an image is successfully uploaded or already exists in S3
+    audio_url: Optional[str] = None  # will be set if an audio file is successfully uploaded
 
-    if record.image_file:
+    if record.image_file:  # only attempt upload if the record references an image file
         # Resolve from {media_dir}/images/ — JSON stores filename only, not a path
-        local = media_dir / "images" / record.image_file
-        ext = Path(record.image_file).suffix
-        s3_key = f"images/{slug}{ext}"
+        local = media_dir / "images" / record.image_file  # full local path to the image file
+        ext = Path(record.image_file).suffix  # preserve original extension (e.g. .jpg, .png) for the S3 key
+        s3_key = f"images/{slug}{ext}"  # S3 key: images/<slug>.<ext>
         try:
-            if key_exists(s3_key):
+            if key_exists(s3_key):  # check S3 before uploading to avoid redundant transfers
                 # File already in S3 — return the existing URL without re-uploading
-                image_url = build_public_url(s3_key)
+                image_url = build_public_url(s3_key)  # construct the public CDN URL from the existing key
                 print(f"  Skipped image upload for {slug!r}: already exists in S3")
             else:
-                image_url = upload_image(str(local), s3_key)
+                image_url = upload_image(str(local), s3_key)  # upload the local file to S3 and return its public URL
         except (FileNotFoundError, RuntimeError) as e:
             # Warn but don't abort — a missing media file shouldn't fail the whole import
             print(f"  Warning: image upload skipped for {slug!r}: {e}")
 
-    if record.audio_file:
+    if record.audio_file:  # only attempt upload if the record references an audio file
         # Resolve from {media_dir}/audio/ — JSON stores filename only, not a path
-        local = media_dir / "audio" / record.audio_file
-        ext = Path(record.audio_file).suffix
+        local = media_dir / "audio" / record.audio_file  # full local path to the audio file
+        ext = Path(record.audio_file).suffix  # preserve original extension (e.g. .mp3, .m4a) for the S3 key
         try:
-            audio_url = upload_audio(str(local), f"audio/{slug}{ext}")
+            if key_exists(s3_key):  # check S3 before uploading to avoid redundant transfers
+            # File already in S3 — return the existing URL without re-uploading
+                audio_url = build_public_url(s3_key)  # construct the public CDN URL from the existing key
+                print(f"  Skipped audio upload for {slug!r}: already exists in S3")
+            else:
+                audio_url = upload_audio(str(local), f"audio/{slug}{ext}")  # upload to S3 under audio/<slug>.<ext>
         except (FileNotFoundError, RuntimeError) as e:
-            print(f"  Warning: audio upload skipped for {slug!r}: {e}")
+            print(f"  Warning: audio upload skipped for {slug!r}: {e}")  # warn but continue — audio is optional
 
-    return image_url, audio_url
+    return image_url, audio_url  # return URLs (or None) to be stored on the recommendation record
 
 
 async def _upsert_one(
