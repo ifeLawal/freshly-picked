@@ -1,21 +1,20 @@
-# Current Feature: Recommendation Catalog API
+# Current Feature
+
+<!-- Feature Name -->
 
 ## Status
 
-In Progress
+<!-- Not Started|In Progress|Completed -->
+
+Not Started
 
 ## Goals
 
-- Create `GET /api/v1/recommendations` endpoint returning a summary response shape
-- Support filtering via query params: `host`, `category`, `tag`, `episode`
-- Support keyword/fuzzy search via `search` query param using `ILIKE` pattern matching
-- Support batch fetching via comma-separated `ids` query param
-- Response shape validated and consistent across all filter combinations
+<!-- Goals & requirements -->
 
 ## Notes
 
-- Response should be a summary shape (not full detail) — suitable for list rendering on mobile
-- Ref: §8 Data Model, §9 API Design, §11 Backend Architecture in the project overview
+<!-- Any extra notes -->
 
 ## History
 
@@ -30,3 +29,4 @@ In Progress
 - 2026-03-22: Ingestion upsert complete — DB writes, media upload to S3, import summary, idempotent upsert via external_source_id; tag creation and linking not implemented (source JSON has no tag data) (`sprint-02/01_ingestion_upsert.md`)
 - 2026-03-23: Ingestion logic refinement — added `--include-media` flag to opt-in to audio/image uploads (skipped by default); image uploads check S3 via head_object and skip re-uploading if key already exists (`sprint-02/ingestion-upsert-update`)
 - 2026-03-23: Link JSON image and audio file for S3 — added `audio_start_seconds` and `audio_end_seconds` keys (null) to all 437 JSON records; `PickRecord` and importer already handled `image_file`/`audio_file` upload and URL linking (`02-sprint/ingestion-upsert-update`)
+- 2026-03-23: Recommendation Catalog API — `GET /api/v1/recommendations` with host/category/tag/episode slug filters, ILIKE keyword search, and comma-separated ids batch fetch; summary response shape with eager-loaded host, episode, and category (`sprint-02/02_catalog_api.md`)
