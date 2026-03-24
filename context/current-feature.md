@@ -1,10 +1,6 @@
 # Current Feature
 
-<!-- Feature Name -->
-
 ## Status
-
-<!-- Not Started|In Progress|Completed -->
 
 Not Started
 
@@ -30,3 +26,4 @@ Not Started
 - 2026-03-23: Ingestion logic refinement — added `--include-media` flag to opt-in to audio/image uploads (skipped by default); image uploads check S3 via head_object and skip re-uploading if key already exists (`sprint-02/ingestion-upsert-update`)
 - 2026-03-23: Link JSON image and audio file for S3 — added `audio_start_seconds` and `audio_end_seconds` keys (null) to all 437 JSON records; `PickRecord` and importer already handled `image_file`/`audio_file` upload and URL linking (`02-sprint/ingestion-upsert-update`)
 - 2026-03-23: Recommendation Catalog API — `GET /api/v1/recommendations` with host/category/tag/episode slug filters, ILIKE keyword search, and comma-separated ids batch fetch; summary response shape with eager-loaded host, episode, and category (`sprint-02/02_catalog_api.md`)
+- 2026-03-23: Home Screen — DashboardScreen connected to live API via React Query; ApiRecommendation type introduced; RecommendationCard, MiniPlayer, AudioPlayerContext, and nav types migrated off mock data; CategoriesSection and FeaturedPicksSection extracted as components for future use; backend RecommendationSummary extended with audio_clip_url (`sprint-02/03_home_screen.md`)
