@@ -1,15 +1,16 @@
 import React from 'react';
-import { View, Text, ScrollView, Pressable, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { MainStackParamList } from '../navigation/types';
-import { recommendations, categories } from '../data/mockData';
+import { ApiRecommendation } from '../models/recommendation';
 import { RecommendationCard } from '../components/RecommendationCard';
 import { useFavorites } from '../context/FavoritesContext';
 import { useAudioPlayer } from '../context/AudioPlayerContext';
 import { useTheme } from '../context/ThemeContext';
+import { useRecommendations } from '../hooks/useRecommendations';
 
 type NavigationProp = NativeStackNavigationProp<MainStackParamList>;
 
@@ -19,25 +20,19 @@ export function DashboardScreen() {
   const { isDarkMode } = useTheme();
   const { isFavorited, toggleFavorite } = useFavorites();
   const { playRecommendation } = useAudioPlayer();
+  const { data: recommendations, isLoading, isError } = useRecommendations();
   const themeStyles = isDarkMode ? darkStyles : ({} as typeof darkStyles);
   const searchIconColor = isDarkMode ? '#888' : '#999';
   const placeholderColor = isDarkMode ? '#888' : '#999';
 
-  const featuredRecommendations = recommendations.slice(0, 5);
-  const recentRecommendations = recommendations.slice(5, 10);
-
-  const handleRecommendationClick = (recommendation: typeof recommendations[0]) => {
+  const handleRecommendationClick = (recommendation: ApiRecommendation) => {
     navigation.navigate('RecommendationDetail', { recommendation });
-  };
-
-  const handleCategoryClick = (category: string) => {
-    navigation.navigate('CategoryList', { category });
   };
 
   return (
     <ScrollView style={[styles.container, themeStyles.container]} contentContainerStyle={styles.content}>
       <View style={[styles.header, { paddingTop: insets.top + 24 }]}>
-        <Text style={[styles.title, themeStyles.title]}>After Hours Picks</Text>
+        <Text style={[styles.title, themeStyles.title]}>Freshly Picked</Text>
 
         <Pressable
           style={[styles.searchButton, themeStyles.searchButton]}
@@ -48,58 +43,41 @@ export function DashboardScreen() {
         </Pressable>
       </View>
 
-      {/* Categories */}
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, themeStyles.sectionTitle]}>Browse by Category</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesScroll}>
-          <View style={styles.categoriesContainer}>
-            {categories.map((category) => (
-              <Pressable
-                key={category.name}
-                style={[styles.categoryCard, themeStyles.categoryCard]}
-                onPress={() => handleCategoryClick(category.name)}
-              >
-                <Ionicons name={category.icon as keyof typeof Ionicons.glyphMap} size={28} color="#4689F3" style={styles.categoryIcon} />
-                <Text style={[styles.categoryName, themeStyles.categoryName]}>{category.name}</Text>
-                <Text style={[styles.categoryCount, themeStyles.categoryCount]}>{category.count} picks</Text>
-              </Pressable>
+        <Text style={[styles.sectionTitle, themeStyles.sectionTitle]}>All Picks</Text>
+
+        {isLoading && (
+          <View style={styles.centeredState}>
+            <ActivityIndicator size="large" color="#4689F3" />
+          </View>
+        )}
+
+        {isError && (
+          <View style={styles.centeredState}>
+            <Text style={[styles.stateText, themeStyles.stateText]}>Failed to load recommendations.</Text>
+          </View>
+        )}
+
+        {!isLoading && !isError && recommendations?.length === 0 && (
+          <View style={styles.centeredState}>
+            <Text style={[styles.stateText, themeStyles.stateText]}>No picks yet.</Text>
+          </View>
+        )}
+
+        {!isLoading && !isError && recommendations && recommendations.length > 0 && (
+          <View style={styles.cardsContainer}>
+            {recommendations.map((rec) => (
+              <RecommendationCard
+                key={rec.id}
+                recommendation={rec}
+                isFavorited={isFavorited(String(rec.id))}
+                onToggleFavorite={toggleFavorite}
+                onPlay={playRecommendation}
+                onClick={handleRecommendationClick}
+              />
             ))}
           </View>
-        </ScrollView>
-      </View>
-
-      {/* Featured Picks */}
-      <View style={styles.section}>
-        <Text style={[styles.sectionTitle, themeStyles.sectionTitle]}>Featured Picks</Text>
-        <View style={styles.cardsContainer}>
-          {featuredRecommendations.map((rec) => (
-            <RecommendationCard
-              key={rec.id}
-              recommendation={rec}
-              isFavorited={isFavorited(rec.id)}
-              onToggleFavorite={toggleFavorite}
-              onPlay={playRecommendation}
-              onClick={handleRecommendationClick}
-            />
-          ))}
-        </View>
-      </View>
-
-      {/* Recently Added */}
-      <View style={styles.section}>
-        <Text style={[styles.sectionTitle, themeStyles.sectionTitle]}>Recently Added</Text>
-        <View style={styles.cardsContainer}>
-          {recentRecommendations.map((rec) => (
-            <RecommendationCard
-              key={rec.id}
-              recommendation={rec}
-              isFavorited={isFavorited(rec.id)}
-              onToggleFavorite={toggleFavorite}
-              onPlay={playRecommendation}
-              onClick={handleRecommendationClick}
-            />
-          ))}
-        </View>
+        )}
       </View>
     </ScrollView>
   );
@@ -111,7 +89,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   content: {
-    paddingBottom: 120, // Space for mini player + tab bar
+    paddingBottom: 120,
   },
   header: {
     paddingHorizontal: 24,
@@ -154,37 +132,12 @@ const styles = StyleSheet.create({
   cardsContainer: {
     paddingHorizontal: 24,
   },
-  categoriesScroll: {
-    paddingLeft: 24,
-  },
-  categoriesContainer: {
-    flexDirection: 'row',
-    gap: 12,
-    paddingRight: 24,
-  },
-  categoryCard: {
-    backgroundColor: 'white',
-    borderRadius: 12,
-    padding: 16,
-    minWidth: 120,
+  centeredState: {
+    paddingVertical: 48,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
   },
-  categoryIcon: {
-    marginBottom: 8,
-  },
-  categoryName: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#1a1a1a',
-    marginBottom: 4,
-  },
-  categoryCount: {
-    fontSize: 12,
+  stateText: {
+    fontSize: 16,
     color: '#999',
   },
 });
@@ -194,8 +147,5 @@ const darkStyles = StyleSheet.create({
   title: { color: '#e5e5e5' },
   searchButton: { backgroundColor: '#1e1e1e', borderColor: '#333' },
   sectionTitle: { color: '#e5e5e5' },
-  categoryCard: { backgroundColor: '#1e1e1e' },
-  categoryName: { color: '#e5e5e5' },
-  categoryCount: { color: '#888' },
+  stateText: { color: '#666' },
 });
-

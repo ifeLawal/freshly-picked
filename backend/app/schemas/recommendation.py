@@ -34,6 +34,7 @@ class RecommendationSummary(BaseModel):
     slug: str
     title: str
     image_url: Optional[str]
+    audio_clip_url: Optional[str]
     has_audio: bool
     host: Optional[HostSummary]
     episode: Optional[EpisodeSummary]

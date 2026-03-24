@@ -1,13 +1,13 @@
 import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
 import { useAudioPlayer as useExpoAudioPlayer, AudioSource, setAudioModeAsync, useAudioPlayerStatus } from 'expo-audio';
-import { Recommendation } from '../data/mockData';
+import { ApiRecommendation } from '../models/recommendation';
 
 interface AudioPlayerContextType {
-  currentlyPlaying: Recommendation | null;
+  currentlyPlaying: ApiRecommendation | null;
   isPlaying: boolean;
   currentTime: number;
   duration: number;
-  playRecommendation: (recommendation: Recommendation) => Promise<void>;
+  playRecommendation: (recommendation: ApiRecommendation) => Promise<void>;
   playPause: () => Promise<void>;
   seek: (time: number) => Promise<void>;
   skip: (seconds: number) => Promise<void>;
@@ -16,7 +16,7 @@ interface AudioPlayerContextType {
 const AudioPlayerContext = createContext<AudioPlayerContextType | undefined>(undefined);
 
 export function AudioPlayerProvider({ children }: { children: ReactNode }) {
-  const [currentlyPlaying, setCurrentlyPlaying] = useState<Recommendation | null>(null);
+  const [currentlyPlaying, setCurrentlyPlaying] = useState<ApiRecommendation | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -49,7 +49,7 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
     }
   }, [audioPlayerStatus.playing, currentTime, duration]);
 
-  const playRecommendation = async (recommendation: Recommendation) => {
+  const playRecommendation = async (recommendation: ApiRecommendation) => {
     try {
       // If same recommendation, toggle play/pause
       if (currentlyPlaying?.id === recommendation.id) {
@@ -57,30 +57,23 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      // Load new audio source
-      let audioSource: AudioSource;
-      if (recommendation.audioUrl) {
-        // Use the audio URL from recommendation
-        audioSource = recommendation.audioUrl;
-      } 
-      else {
-        // Fallback to local asset if available
-        audioSource = null;
-      }
+      const audioSource: AudioSource = recommendation.audio_clip_url
+        ? { uri: recommendation.audio_clip_url }
+        : null;
 
-      // Replace the current audio source
       audioPlayer.replace(audioSource);
       audioPlayer.play();
 
       setCurrentlyPlaying(recommendation);
-      setDuration(recommendation.duration ?? 0);
+      // TODO: duration is not available on ApiRecommendation summary — update once a full detail endpoint provides it
+      setDuration(0);
       setCurrentTime(0);
       setIsPlaying(true);
     } catch (error) {
       console.error('Error playing recommendation:', error);
-      // Fallback: simulate playback
       setCurrentlyPlaying(recommendation);
-      setDuration(recommendation.duration ?? 0);
+      // TODO: duration is not available on ApiRecommendation summary — update once a full detail endpoint provides it
+      setDuration(0);
       setCurrentTime(0);
       setIsPlaying(true);
     }
@@ -95,7 +88,6 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
           audioPlayer.play();
         }
       } else if (currentlyPlaying) {
-        // Simulate play/pause for mock data
         setIsPlaying(!isPlaying);
       }
     } catch (error) {

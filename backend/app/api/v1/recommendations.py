@@ -16,6 +16,7 @@ def _to_summary(rec) -> RecommendationSummary:
         slug=rec.slug,
         title=rec.title,
         image_url=rec.image_url,
+        audio_clip_url=rec.audio_clip_url,
         has_audio=rec.audio_clip_url is not None,
         host=rec.host,
         episode=rec.episode,
