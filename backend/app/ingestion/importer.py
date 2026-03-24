@@ -31,7 +31,7 @@ from app.models.category import Category
 from app.models.episode import Episode
 from app.models.host import Host
 from app.models.recommendation import Recommendation
-from app.storage.s3 import upload_audio, upload_image
+from app.storage.s3 import build_public_url, key_exists, upload_audio, upload_image
 
 
 @dataclass
@@ -125,9 +125,10 @@ def _upload_media(
     record: PickRecord,
     slug: str,
     media_dir: Optional[Path],
+    include_media: bool,
 ) -> tuple[Optional[str], Optional[str]]:
-    # Skip entirely if no media dir was provided
-    if not media_dir:
+    # Skip entirely if media uploads are disabled or no media dir was provided
+    if not include_media or not media_dir:
         return None, None
 
     image_url: Optional[str] = None
@@ -137,8 +138,14 @@ def _upload_media(
         # Resolve from {media_dir}/images/ — JSON stores filename only, not a path
         local = media_dir / "images" / record.image_file
         ext = Path(record.image_file).suffix
+        s3_key = f"images/{slug}{ext}"
         try:
-            image_url = upload_image(str(local), f"images/{slug}{ext}")
+            if key_exists(s3_key):
+                # File already in S3 — return the existing URL without re-uploading
+                image_url = build_public_url(s3_key)
+                print(f"  Skipped image upload for {slug!r}: already exists in S3")
+            else:
+                image_url = upload_image(str(local), s3_key)
         except (FileNotFoundError, RuntimeError) as e:
             # Warn but don't abort — a missing media file shouldn't fail the whole import
             print(f"  Warning: image upload skipped for {slug!r}: {e}")
@@ -160,6 +167,7 @@ async def _upsert_one(
     record: PickRecord,
     dry_run: bool,
     media_dir: Optional[Path],
+    include_media: bool,
 ) -> str:
     ext_id = build_external_source_id(record)
 
@@ -188,7 +196,7 @@ async def _upsert_one(
         existing.audio_end_seconds = record.audio_end_seconds
 
         if not dry_run:
-            image_url, audio_url = _upload_media(record, existing.slug, media_dir)
+            image_url, audio_url = _upload_media(record, existing.slug, media_dir, include_media)
             if image_url:
                 existing.image_url = image_url
             if audio_url:
@@ -200,7 +208,7 @@ async def _upsert_one(
     rec_slug = f"{_slugify(record.recommendation_name)[:60]}-{ext_id[:8]}"
     image_url, audio_url = None, None
     if not dry_run:
-        image_url, audio_url = _upload_media(record, rec_slug, media_dir)
+        image_url, audio_url = _upload_media(record, rec_slug, media_dir, include_media)
 
     rec = Recommendation(
         slug=rec_slug,
@@ -224,13 +232,14 @@ async def _run(
     records: list[PickRecord],
     dry_run: bool,
     media_dir: Optional[Path],
+    include_media: bool,
 ) -> ImportSummary:
     summary = ImportSummary()
 
     async with AsyncSessionLocal() as session:
         for record in records:
             try:
-                action = await _upsert_one(session, record, dry_run, media_dir)
+                action = await _upsert_one(session, record, dry_run, media_dir, include_media)
                 if action == "created":
                     summary.created += 1
                 else:
@@ -252,6 +261,7 @@ def run_import(
     records: list[PickRecord],
     dry_run: bool = False,
     media_dir: Optional[Path] = None,
+    include_media: bool = False,
 ) -> ImportSummary:
     # asyncio.run drives the async session from the synchronous CLI entry point
-    return asyncio.run(_run(records, dry_run, media_dir))
+    return asyncio.run(_run(records, dry_run, media_dir, include_media))

@@ -2,12 +2,14 @@
 CLI entry point for ingesting recommendation data from a JSON file.
 
 Usage:
-    freshly-ingest <file> [--dry-run] [--media-dir <dir>]
+    freshly-ingest <file> [--dry-run] [--media-dir <dir>] [--include-media]
 
 Examples:
     freshly-ingest context/data/harvard_after_hours_picks.json --dry-run
     freshly-ingest context/data/harvard_after_hours_picks.json
     freshly-ingest context/data/harvard_after_hours_picks.json --media-dir context/
+    freshly-ingest context/data/harvard_after_hours_picks.json --include-media
+    freshly-ingest context/data/harvard_after_hours_picks.json --media-dir context/ --include-media
 """
 
 import argparse
@@ -67,6 +69,11 @@ def main() -> None:
         default=None,
         help="Directory containing audio/ and images/ subdirs (default: one level above the JSON file)",
     )
+    parser.add_argument(
+        "--include-media",
+        action="store_true",
+        help="Upload image and audio files to S3 (skipped by default to keep imports fast)",
+    )
     args = parser.parse_args()
     args.file = args.file.resolve()  # absolute path so CWD changes don't affect resolution
 
@@ -107,7 +114,7 @@ def main() -> None:
     media_dir = (args.media_dir or args.file.parent.parent).resolve()
 
     print(f"\n{mode}Importing {len(result.valid)} records...")
-    summary = run_import(result.valid, dry_run=args.dry_run, media_dir=media_dir)
+    summary = run_import(result.valid, dry_run=args.dry_run, media_dir=media_dir, include_media=args.include_media)
     summary.skipped = len(result.invalid)  # invalid records were skipped before import
     _print_summary(summary, dry_run=args.dry_run)
 

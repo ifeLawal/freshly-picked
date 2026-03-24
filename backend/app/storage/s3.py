@@ -53,7 +53,7 @@ def upload_file(local_path: str, s3_key: str) -> str:
     except (BotoCoreError, ClientError) as exc:
         raise RuntimeError(f"S3 upload failed for {s3_key!r}: {exc}") from exc
 
-    return _build_public_url(s3_key)
+    return build_public_url(s3_key)
 
 
 def upload_image(local_path: str, s3_key: str) -> str:
@@ -84,7 +84,18 @@ def upload_audio(local_path: str, s3_key: str) -> str:
     return upload_file(local_path, s3_key)
 
 
-def _build_public_url(s3_key: str) -> str:
+def key_exists(s3_key: str) -> bool:
+    """Return True if the given key already exists in the S3 bucket."""
+    try:
+        _s3_client.head_object(Bucket=settings.aws_s3_bucket, Key=s3_key)
+        return True
+    except ClientError as e:
+        if e.response["Error"]["Code"] in ("404", "NoSuchKey"):
+            return False
+        raise RuntimeError(f"S3 head_object failed for {s3_key!r}: {e}") from e
+
+
+def build_public_url(s3_key: str) -> str:
     """
     Construct the public HTTPS URL for an object in the configured bucket.
 
