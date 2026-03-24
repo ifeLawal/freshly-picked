@@ -1,20 +1,21 @@
-# Current Feature
-
-<!-- Feature Name -->
+# Current Feature: Recommendation Catalog API
 
 ## Status
 
-<!-- Not Started|In Progress|Completed -->
-
-Not Started
+In Progress
 
 ## Goals
 
-<!-- Goals & requirements -->
+- Create `GET /api/v1/recommendations` endpoint returning a summary response shape
+- Support filtering via query params: `host`, `category`, `tag`, `episode`
+- Support keyword/fuzzy search via `search` query param using `ILIKE` pattern matching
+- Support batch fetching via comma-separated `ids` query param
+- Response shape validated and consistent across all filter combinations
 
 ## Notes
 
-<!-- Any extra notes -->
+- Response should be a summary shape (not full detail) — suitable for list rendering on mobile
+- Ref: §8 Data Model, §9 API Design, §11 Backend Architecture in the project overview
 
 ## History
 
