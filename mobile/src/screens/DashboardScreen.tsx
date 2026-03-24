@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, ScrollView, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
+import React, { useCallback, useMemo } from 'react';
+import { View, Text, FlatList, Pressable, StyleSheet, ActivityIndicator, ListRenderItem } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -20,66 +20,78 @@ export function DashboardScreen() {
   const { isDarkMode } = useTheme();
   const { isFavorited, toggleFavorite } = useFavorites();
   const { playRecommendation } = useAudioPlayer();
-  const { data: recommendations, isLoading, isError } = useRecommendations();
+  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } = useRecommendations();
   const themeStyles = isDarkMode ? darkStyles : ({} as typeof darkStyles);
   const searchIconColor = isDarkMode ? '#888' : '#999';
   const placeholderColor = isDarkMode ? '#888' : '#999';
 
-  const handleRecommendationClick = (recommendation: ApiRecommendation) => {
+  const recommendations = data?.pages.flat() ?? [];
+
+  const handleRecommendationClick = useCallback((recommendation: ApiRecommendation) => {
     navigation.navigate('RecommendationDetail', { recommendation });
-  };
+  }, [navigation]);
+
+  const renderItem: ListRenderItem<ApiRecommendation> = useCallback(({ item }) => (
+    <RecommendationCard
+      recommendation={item}
+      isFavorited={isFavorited(String(item.id))}
+      onToggleFavorite={toggleFavorite}
+      onPlay={playRecommendation}
+      onClick={handleRecommendationClick}
+    />
+  ), [isFavorited, toggleFavorite, playRecommendation, handleRecommendationClick]);
+
+  const handleEndReached = useCallback(() => {
+    if (hasNextPage) fetchNextPage();
+  }, [hasNextPage, fetchNextPage]);
+
+  const listHeader = useMemo(() => (
+    <View style={[styles.header, { paddingTop: insets.top + 24 }]}>
+      <Text style={[styles.title, themeStyles.title]}>Freshly Picked</Text>
+      <Pressable
+        style={[styles.searchButton, themeStyles.searchButton]}
+        onPress={() => navigation.navigate('Search')}
+      >
+        <Ionicons name="search" size={20} color={searchIconColor} style={styles.searchIcon} />
+        <Text style={[styles.searchPlaceholder, { color: placeholderColor }]}>Search recommendations...</Text>
+      </Pressable>
+      <Text style={[styles.sectionTitle, themeStyles.sectionTitle]}>All Picks</Text>
+    </View>
+  ), [insets.top, themeStyles, searchIconColor, placeholderColor, navigation]);
+
+  const listEmpty = useMemo(() => isLoading ? (
+    <View style={styles.centeredState}>
+      <ActivityIndicator size="large" color="#4689F3" />
+    </View>
+  ) : isError ? (
+    <View style={styles.centeredState}>
+      <Text style={[styles.stateText, themeStyles.stateText]}>Failed to load recommendations.</Text>
+    </View>
+  ) : (
+    <View style={styles.centeredState}>
+      <Text style={[styles.stateText, themeStyles.stateText]}>No picks yet.</Text>
+    </View>
+  ), [isLoading, isError, themeStyles]);
+
+  const listFooter = useMemo(() => isFetchingNextPage ? (
+    <View style={styles.footerLoader}>
+      <ActivityIndicator size="small" color="#4689F3" />
+    </View>
+  ) : null, [isFetchingNextPage]);
 
   return (
-    <ScrollView style={[styles.container, themeStyles.container]} contentContainerStyle={styles.content}>
-      <View style={[styles.header, { paddingTop: insets.top + 24 }]}>
-        <Text style={[styles.title, themeStyles.title]}>Freshly Picked</Text>
-
-        <Pressable
-          style={[styles.searchButton, themeStyles.searchButton]}
-          onPress={() => navigation.navigate('Search')}
-        >
-          <Ionicons name="search" size={20} color={searchIconColor} style={styles.searchIcon} />
-          <Text style={[styles.searchPlaceholder, { color: placeholderColor }]}>Search recommendations...</Text>
-        </Pressable>
-      </View>
-
-      <View style={styles.section}>
-        <Text style={[styles.sectionTitle, themeStyles.sectionTitle]}>All Picks</Text>
-
-        {isLoading && (
-          <View style={styles.centeredState}>
-            <ActivityIndicator size="large" color="#4689F3" />
-          </View>
-        )}
-
-        {isError && (
-          <View style={styles.centeredState}>
-            <Text style={[styles.stateText, themeStyles.stateText]}>Failed to load recommendations.</Text>
-          </View>
-        )}
-
-        {!isLoading && !isError && recommendations?.length === 0 && (
-          <View style={styles.centeredState}>
-            <Text style={[styles.stateText, themeStyles.stateText]}>No picks yet.</Text>
-          </View>
-        )}
-
-        {!isLoading && !isError && recommendations && recommendations.length > 0 && (
-          <View style={styles.cardsContainer}>
-            {recommendations.map((rec) => (
-              <RecommendationCard
-                key={rec.id}
-                recommendation={rec}
-                isFavorited={isFavorited(String(rec.id))}
-                onToggleFavorite={toggleFavorite}
-                onPlay={playRecommendation}
-                onClick={handleRecommendationClick}
-              />
-            ))}
-          </View>
-        )}
-      </View>
-    </ScrollView>
+    <FlatList
+      style={[styles.container, themeStyles.container]}
+      contentContainerStyle={styles.content}
+      data={recommendations}
+      keyExtractor={(item) => String(item.id)}
+      renderItem={renderItem}
+      ListHeaderComponent={listHeader}
+      ListEmptyComponent={listEmpty}
+      ListFooterComponent={listFooter}
+      onEndReached={handleEndReached}
+      onEndReachedThreshold={0.3}
+    />
   );
 }
 
@@ -89,11 +101,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   content: {
+    paddingHorizontal: 24,
     paddingBottom: 120,
   },
   header: {
-    paddingHorizontal: 24,
-    paddingBottom: 24,
+    paddingBottom: 8,
   },
   title: {
     fontSize: 32,
@@ -119,18 +131,12 @@ const styles = StyleSheet.create({
     color: '#999',
     flex: 1,
   },
-  section: {
-    marginBottom: 32,
-  },
   sectionTitle: {
     fontSize: 20,
     fontWeight: '600',
     color: '#1a1a1a',
+    marginTop: 24,
     marginBottom: 16,
-    paddingHorizontal: 24,
-  },
-  cardsContainer: {
-    paddingHorizontal: 24,
   },
   centeredState: {
     paddingVertical: 48,
@@ -139,6 +145,10 @@ const styles = StyleSheet.create({
   stateText: {
     fontSize: 16,
     color: '#999',
+  },
+  footerLoader: {
+    paddingVertical: 24,
+    alignItems: 'center',
   },
 });
 

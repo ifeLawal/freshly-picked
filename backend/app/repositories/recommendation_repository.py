@@ -20,6 +20,8 @@ async def get_recommendations(
     episode: Optional[str] = None,
     search: Optional[str] = None,
     ids: Optional[list[int]] = None,
+    limit: int = 50,
+    offset: int = 0,
 ) -> list[Recommendation]:
     stmt = (
         select(Recommendation)
@@ -64,5 +66,6 @@ async def get_recommendations(
             | Recommendation.why_recommended.ilike(pattern)
         )
 
+    stmt = stmt.limit(limit).offset(offset)
     result = await session.execute(stmt)
     return list(result.scalars().all())

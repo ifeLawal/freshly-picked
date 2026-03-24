@@ -32,6 +32,8 @@ async def list_recommendations(
     episode: Optional[str] = Query(default=None, description="Filter by episode slug"),
     search: Optional[str] = Query(default=None, description="Keyword search across title and why_recommended"),
     ids: Optional[str] = Query(default=None, description="Comma-separated recommendation IDs for batch fetch"),
+    limit: int = Query(default=50, ge=1, le=200, description="Number of results per page"),
+    offset: int = Query(default=0, ge=0, description="Number of results to skip"),
     session: AsyncSession = Depends(get_session),
 ) -> list[RecommendationSummary]:
     if ids:
@@ -50,6 +52,8 @@ async def list_recommendations(
         episode=episode,
         search=search,
         ids=parsed_ids,
+        limit=limit,
+        offset=offset,
     )
 
     return [_to_summary(r) for r in recs]
