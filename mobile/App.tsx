@@ -1,4 +1,5 @@
 import React from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { NavigationContainer, DefaultTheme, DarkTheme as NavDarkTheme } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -46,18 +47,22 @@ function AppContent() {
   );
 }
 
+const queryClient = new QueryClient();
+
 export default function App() {
   return (
-    <SafeAreaProvider>
-      <ThemeProvider>
-        <FavoritesProvider>
-          <AudioPlayerProvider>
-            <RecommendationDetailScreenProvider>
-              <AppContent />
-            </RecommendationDetailScreenProvider>
-          </AudioPlayerProvider>
-        </FavoritesProvider>
-      </ThemeProvider>
-    </SafeAreaProvider>
+    <QueryClientProvider client={queryClient}>
+      <SafeAreaProvider>
+        <ThemeProvider>
+          <FavoritesProvider>
+            <AudioPlayerProvider>
+              <RecommendationDetailScreenProvider>
+                <AppContent />
+              </RecommendationDetailScreenProvider>
+            </AudioPlayerProvider>
+          </FavoritesProvider>
+        </ThemeProvider>
+      </SafeAreaProvider>
+    </QueryClientProvider>
   );
 }

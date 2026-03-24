@@ -1,15 +1,15 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Recommendation } from '../data/mockData';
+import { ApiRecommendation } from '../models/recommendation';
 import { useTheme } from '../context/ThemeContext';
 
 interface RecommendationCardProps {
-  recommendation: Recommendation;
+  recommendation: ApiRecommendation;
   isFavorited: boolean;
   onToggleFavorite: (id: string) => void;
-  onPlay: (recommendation: Recommendation) => void;
-  onClick: (recommendation: Recommendation) => void;
+  onPlay: (recommendation: ApiRecommendation) => void;
+  onClick: (recommendation: ApiRecommendation) => void;
 }
 
 const getCategoryColor = (category: string) => {
@@ -32,8 +32,16 @@ export function RecommendationCard({
   onClick,
 }: RecommendationCardProps) {
   const { isDarkMode } = useTheme();
-  const categoryColor = getCategoryColor(recommendation.category);
+  const categoryName = recommendation.category?.name ?? '';
+  const categoryColor = getCategoryColor(categoryName);
   const themeStyles = isDarkMode ? darkStyles : ({} as typeof darkStyles);
+
+  const hostName = recommendation.host?.name ?? '';
+  const season = recommendation.episode?.season;
+  const episodeNumber = recommendation.episode?.episode_number;
+  const episodeMeta = season != null && episodeNumber != null
+    ? `S${season}E${episodeNumber}`
+    : null;
 
   return (
     <Pressable
@@ -44,25 +52,24 @@ export function RecommendationCard({
       <View style={styles.content}>
         <View style={styles.header}>
           <View style={styles.mainContent}>
-            <View style={styles.categoryBadge}>
-              <View style={[styles.categoryBadgeInner, { backgroundColor: `${categoryColor}15` }]}>
-                <Text style={[styles.categoryText, { color: categoryColor }]}>
-                  {recommendation.category}
-                </Text>
+            {categoryName ? (
+              <View style={styles.categoryBadge}>
+                <View style={[styles.categoryBadgeInner, { backgroundColor: `${categoryColor}15` }]}>
+                  <Text style={[styles.categoryText, { color: categoryColor }]}>
+                    {categoryName}
+                  </Text>
+                </View>
               </View>
-            </View>
+            ) : null}
             <Text style={[styles.title, themeStyles.title]} numberOfLines={1}>
               {recommendation.title}
-            </Text>
-            <Text style={[styles.description, themeStyles.description]} numberOfLines={2}>
-              {recommendation.description}
             </Text>
           </View>
 
           <Pressable
             onPress={(e) => {
               e.stopPropagation();
-              onToggleFavorite(recommendation.id);
+              onToggleFavorite(String(recommendation.id));
             }}
             style={styles.favoriteButton}
             hitSlop={8}
@@ -71,12 +78,12 @@ export function RecommendationCard({
           </Pressable>
         </View>
 
-        <View style={[styles.footer, !recommendation.audioUrl && styles.footerNoPlay]}>
+        <View style={[styles.footer, !recommendation.has_audio && styles.footerNoPlay]}>
           <Text style={[styles.metadata, themeStyles.metadata]}>
-            {recommendation.host} • S{recommendation.season}E{recommendation.episode}
+            {[hostName, episodeMeta].filter(Boolean).join(' • ')}
           </Text>
 
-          {recommendation.audioUrl ? (
+          {recommendation.has_audio ? (
             <Pressable
               onPress={(e) => {
                 e.stopPropagation();
@@ -105,7 +112,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 2,
-    // marginHorizontal: 24,
   },
   content: {
     padding: 16,
@@ -137,18 +143,9 @@ const styles = StyleSheet.create({
     color: '#1a1a1a',
     marginBottom: 4,
   },
-  description: {
-    fontSize: 14,
-    color: '#666',
-    lineHeight: 20,
-  },
   favoriteButton: {
     padding: 8,
     borderRadius: 20,
-  },
-  star: {
-    fontSize: 20,
-    color: '#4689F3',
   },
   footer: {
     flexDirection: 'row',
@@ -183,7 +180,5 @@ const styles = StyleSheet.create({
 const darkStyles = StyleSheet.create({
   card: { backgroundColor: '#1e1e1e' },
   title: { color: '#e5e5e5' },
-  description: { color: '#888' },
   metadata: { color: '#888' },
 });
-

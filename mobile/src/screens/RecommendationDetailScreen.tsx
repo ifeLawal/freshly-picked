@@ -6,7 +6,6 @@ import { RouteProp } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { MainStackParamList } from '../navigation/types';
-import { recommendations } from '../data/mockData';
 import { RecommendationCard } from '../components/RecommendationCard';
 import { useFavorites } from '../context/FavoritesContext';
 import { useAudioPlayer } from '../context/AudioPlayerContext';
@@ -53,21 +52,18 @@ export function RecommendationDetailScreen() {
     return () => setOnRecommendationDetailScreen(false);
   }, [setOnRecommendationDetailScreen]);
 
-  const hasAudio = Boolean(recommendation.audioUrl);
+  const hasAudio = recommendation.has_audio;
   const isThisRecommendationPlaying = currentlyPlaying?.id === recommendation.id;
   const showPause = isThisRecommendationPlaying && isPlaying;
-  const duration = recommendation.duration ?? 0;
+  // TODO: duration is not available on ApiRecommendation summary — update once a full detail endpoint provides it
+  const duration = 0;
   const displayTime = isThisRecommendationPlaying ? currentTime : 0;
   const progress = isThisRecommendationPlaying && duration > 0 ? (currentTime / duration) * 100 : 0;
 
-  const relatedRecommendations = recommendations.filter(
-    (rec) => rec.episodeId === recommendation.episodeId && rec.id !== recommendation.id
-  );
+  const categoryColor = getCategoryColor(recommendation.category?.name ?? '');
 
-  const categoryColor = getCategoryColor(recommendation.category);
-
-  const handleRelatedClick = (rec: typeof recommendations[0]) => {
-    navigation.navigate('RecommendationDetail', { recommendation: rec });
+  const handleRelatedClick = () => {
+    // TODO: related recommendations require episode-scoped API query — not yet implemented
   };
 
   return (
@@ -87,10 +83,10 @@ export function RecommendationDetailScreen() {
         <View style={styles.titleRow}>
           <Text style={[styles.title, themeStyles.title]}>{recommendation.title}</Text>
             <Pressable
-            onPress={() => toggleFavorite(recommendation.id)}
+            onPress={() => toggleFavorite(String(recommendation.id))}
             style={styles.favoriteButton}
           >
-            <Ionicons name={isFavorited(recommendation.id) ? 'star' : 'star-outline'} size={24} color="#4689F3" />
+            <Ionicons name={isFavorited(String(recommendation.id)) ? 'star' : 'star-outline'} size={24} color="#4689F3" />
           </Pressable>
         </View>
 
@@ -101,7 +97,7 @@ export function RecommendationDetailScreen() {
               {/* Recommendation image */}
               <View style={styles.recommendationImageContainer}>
                 <Image
-                  source={recommendation.imageUrl ? recommendation.imageUrl : DEFAULT_RECOMMENDATION_IMAGE}
+                  source={recommendation.image_url ? { uri: recommendation.image_url } : DEFAULT_RECOMMENDATION_IMAGE}
                   style={styles.recommendationImage}
                   resizeMode="cover"
                 />
@@ -160,31 +156,19 @@ export function RecommendationDetailScreen() {
         </View>
 
         <Text style={[styles.metadata, themeStyles.metadata]}>
-          {recommendation.host} • S{recommendation.season}E{recommendation.episode} • {new Date(recommendation.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+          {[
+            recommendation.host?.name,
+            recommendation.episode
+              ? `S${recommendation.episode.season}E${recommendation.episode.episode_number}`
+              : null,
+          ].filter(Boolean).join(' • ')}
         </Text>
 
-        <Text style={[styles.categoryText, styles.categoryBadge, { backgroundColor: `${categoryColor}15` }, { color: categoryColor }]}>
-          {recommendation.category}
-        </Text>
-
-        <Text style={[styles.description, themeStyles.description]}>{recommendation.description}</Text>
-
-        {/* Related Recommendations */}
-        {relatedRecommendations.length > 0 && (
-          <View style={styles.relatedSection}>
-            <Text style={[styles.relatedTitle, themeStyles.relatedTitle]}>More from this episode</Text>
-            {relatedRecommendations.map((rec) => (
-              <RecommendationCard
-                key={rec.id}
-                recommendation={rec}
-                isFavorited={isFavorited(rec.id)}
-                onToggleFavorite={toggleFavorite}
-                onPlay={playRecommendation}
-                onClick={handleRelatedClick}
-              />
-            ))}
-          </View>
-        )}
+        {recommendation.category ? (
+          <Text style={[styles.categoryText, styles.categoryBadge, { backgroundColor: `${categoryColor}15` }, { color: categoryColor }]}>
+            {recommendation.category.name}
+          </Text>
+        ) : null}
       </View>
     </ScrollView>
   );

@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Recommendation } from '../data/mockData';
+import { ApiRecommendation } from '../models/recommendation';
 import { useTheme } from '../context/ThemeContext';
 
 interface MiniPlayerProps {
-  recommendation: Recommendation | null;
+  recommendation: ApiRecommendation | null;
   isPlaying: boolean;
   currentTime: number;
   onPlayPause: () => void;
@@ -36,8 +36,15 @@ export function MiniPlayer({
 
   if (!recommendation) return null;
 
-  const duration = recommendation.duration ?? 0;
+  // TODO: duration is not available on ApiRecommendation summary — update once a full detail endpoint provides it
+  const duration = 0;
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+
+  const hostName = recommendation.host?.name ?? '';
+  const season = recommendation.episode?.season;
+  const episodeNumber = recommendation.episode?.episode_number;
+  const episodeMeta = season != null && episodeNumber != null ? `S${season}E${episodeNumber}` : null;
+  const subtitleParts = [hostName, episodeMeta, formatTime(currentTime)].filter(Boolean);
   
   return (
     <View style={[styles.container, themeStyles.container, { bottom: bottomOffset }]}>
@@ -53,7 +60,7 @@ export function MiniPlayer({
             {recommendation.title}
           </Text>
           <Text style={[styles.subtitle, themeStyles.subtitle]} numberOfLines={1}>
-            {recommendation.host} • S{recommendation.season}E{recommendation.episode} • {formatTime(currentTime)} / {formatTime(duration)}
+            {subtitleParts.join(' • ')}
           </Text>
         </View>
 

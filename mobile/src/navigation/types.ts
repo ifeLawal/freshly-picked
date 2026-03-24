@@ -1,5 +1,6 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
-import { Recommendation, Episode } from '../data/mockData';
+import { Episode } from '../data/mockData';
+import { ApiRecommendation } from '../models/recommendation';
 
 export type RootStackParamList = {
   Onboarding: undefined;
@@ -20,7 +21,7 @@ export type MainStackParamList = {
   Search?: undefined;
   Favorites?: undefined;
   Settings?: undefined;
-  RecommendationDetail: { recommendation: Recommendation };
+  RecommendationDetail: { recommendation: ApiRecommendation };
   EpisodeDetail: { episode: Episode };
   CategoryList: { category: string };
 };
