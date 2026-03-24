@@ -6,6 +6,8 @@
 
 <!-- Not Started|In Progress|Completed -->
 
+Not Started
+
 ## Goals
 
 <!-- Goals & requirements -->
@@ -25,3 +27,4 @@
 - 2026-03-20: Mobile Setup done — Create the react native application and screens (`05_mobile_setup.md`)
 - 2026-03-21: Ingestion CLI base done — CLI entry point, JSON loading, validation, dry-run flag (`sprint-01/06_ingestion_cli_base.md`)
 - 2026-03-22: Ingestion upsert complete — DB writes, media upload to S3, import summary, idempotent upsert via external_source_id; tag creation and linking not implemented (source JSON has no tag data) (`sprint-02/01_ingestion_upsert.md`)
+- 2026-03-23: Ingestion logic refinement — added `--include-media` flag to opt-in to audio/image uploads (skipped by default); image uploads check S3 via head_object and skip re-uploading if key already exists (`sprint-02/ingestion-upsert-update`)
