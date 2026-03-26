@@ -14,7 +14,8 @@ Read the following to get the full context of the project:
 
 ## Commands Frontend
 
-- **React native start ios**: `npx expo start --ios` (runs on http://localhost:8080)
+- **React native start**: `npm start` (need to select the simulator)
+- **React native start ios**: `npm ios` or `npx expo start --ios` (runs on http://localhost:8080)
 - **Build**: 
 ```bash
 eas build:configure

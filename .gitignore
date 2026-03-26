@@ -1,5 +1,10 @@
+# macOS
+*.DS_Store
+
+# Local
+backend/images/
 context/images/
-context/audio/
+backend/audio/
 .DS_Store
 *.egg-info/
 __pycache__/
