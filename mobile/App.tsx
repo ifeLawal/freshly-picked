@@ -4,6 +4,7 @@ import { NavigationContainer, DefaultTheme, DarkTheme as NavDarkTheme } from '@r
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { FavoritesProvider } from './src/context/FavoritesContext';
+import { CompletedProvider } from './src/context/CompletedContext';
 import { AudioPlayerProvider } from './src/context/AudioPlayerContext';
 import { RecommendationDetailScreenProvider } from './src/context/RecommendationDetailScreenContext';
 import { ThemeProvider, useTheme } from './src/context/ThemeContext';
@@ -55,11 +56,13 @@ export default function App() {
       <SafeAreaProvider>
         <ThemeProvider>
           <FavoritesProvider>
-            <AudioPlayerProvider>
-              <RecommendationDetailScreenProvider>
-                <AppContent />
-              </RecommendationDetailScreenProvider>
-            </AudioPlayerProvider>
+            <CompletedProvider>
+              <AudioPlayerProvider>
+                <RecommendationDetailScreenProvider>
+                  <AppContent />
+                </RecommendationDetailScreenProvider>
+              </AudioPlayerProvider>
+            </CompletedProvider>
           </FavoritesProvider>
         </ThemeProvider>
       </SafeAreaProvider>

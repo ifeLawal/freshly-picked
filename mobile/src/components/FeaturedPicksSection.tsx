@@ -7,16 +7,18 @@ import { ApiRecommendation } from '../models/recommendation';
 interface FeaturedPicksSectionProps {
   recommendations: ApiRecommendation[];
   isFavorited: (id: string) => boolean;
+  isCompleted: (id: string) => boolean;
   onToggleFavorite: (id: string) => void;
-  onPlay: (recommendation: ApiRecommendation) => void;
+  onToggleCompleted: (id: string) => void;
   onPress: (recommendation: ApiRecommendation) => void;
 }
 
 export function FeaturedPicksSection({
   recommendations,
   isFavorited,
+  isCompleted,
   onToggleFavorite,
-  onPlay,
+  onToggleCompleted,
   onPress,
 }: FeaturedPicksSectionProps) {
   const { isDarkMode } = useTheme();
@@ -37,8 +39,9 @@ export function FeaturedPicksSection({
               key={rec.id}
               recommendation={rec}
               isFavorited={isFavorited(String(rec.id))}
+              isCompleted={isCompleted(String(rec.id))}
               onToggleFavorite={onToggleFavorite}
-              onPlay={onPlay}
+              onToggleCompleted={onToggleCompleted}
               onClick={onPress}
             />
           ))}
@@ -54,8 +57,9 @@ export function FeaturedPicksSection({
                 key={rec.id}
                 recommendation={rec}
                 isFavorited={isFavorited(String(rec.id))}
+                isCompleted={isCompleted(String(rec.id))}
                 onToggleFavorite={onToggleFavorite}
-                onPlay={onPlay}
+                onToggleCompleted={onToggleCompleted}
                 onClick={onPress}
               />
             ))}

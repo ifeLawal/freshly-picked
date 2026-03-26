@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const STORAGE_KEYS = {
   FAVORITES: 'favorites',
+  COMPLETED: 'completed',
   ONBOARDING_COMPLETED: 'onboardingCompleted',
   RECENT_SEARCHES: 'recentSearches',
   DARK_MODE: 'darkMode',
@@ -27,6 +28,28 @@ export const storage = {
       await AsyncStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify(Array.from(favorites)));
     } catch (error) {
       console.error('Error saving favorites:', error);
+    }
+  },
+
+  // Completed
+  async getCompleted(): Promise<Set<string>> {
+    try {
+      const stored = await AsyncStorage.getItem(STORAGE_KEYS.COMPLETED);
+      if (stored) {
+        return new Set(JSON.parse(stored));
+      }
+      return new Set();
+    } catch (error) {
+      console.error('Error loading completed:', error);
+      return new Set();
+    }
+  },
+
+  async saveCompleted(completed: Set<string>): Promise<void> {
+    try {
+      await AsyncStorage.setItem(STORAGE_KEYS.COMPLETED, JSON.stringify(Array.from(completed)));
+    } catch (error) {
+      console.error('Error saving completed:', error);
     }
   },
 

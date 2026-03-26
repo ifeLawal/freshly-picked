@@ -7,8 +7,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { MainStackParamList } from '../navigation/types';
 import { ApiRecommendation } from '../models/recommendation';
 import { RecommendationCard } from '../components/RecommendationCard';
+import { CategoryPicksSection } from '../components/CategoryPicksSection';
 import { useFavorites } from '../context/FavoritesContext';
-import { useAudioPlayer } from '../context/AudioPlayerContext';
+import { useCompleted } from '../context/CompletedContext';
 import { useTheme } from '../context/ThemeContext';
 import { useRecommendations } from '../hooks/useRecommendations';
 
@@ -19,7 +20,7 @@ export function DashboardScreen() {
   const navigation = useNavigation<NavigationProp>();
   const { isDarkMode } = useTheme();
   const { isFavorited, toggleFavorite } = useFavorites();
-  const { playRecommendation } = useAudioPlayer();
+  const { isCompleted, toggleCompleted } = useCompleted();
   const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } = useRecommendations();
   const themeStyles = isDarkMode ? darkStyles : ({} as typeof darkStyles);
   const searchIconColor = isDarkMode ? '#888' : '#999';
@@ -35,11 +36,12 @@ export function DashboardScreen() {
     <RecommendationCard
       recommendation={item}
       isFavorited={isFavorited(String(item.id))}
+      isCompleted={isCompleted(String(item.id))}
       onToggleFavorite={toggleFavorite}
-      onPlay={playRecommendation}
+      onToggleCompleted={toggleCompleted}
       onClick={handleRecommendationClick}
     />
-  ), [isFavorited, toggleFavorite, playRecommendation, handleRecommendationClick]);
+  ), [isFavorited, isCompleted, toggleFavorite, toggleCompleted, handleRecommendationClick]);
 
   const handleEndReached = useCallback(() => {
     if (hasNextPage) fetchNextPage();
@@ -55,6 +57,10 @@ export function DashboardScreen() {
         <Ionicons name="search" size={20} color={searchIconColor} style={styles.searchIcon} />
         <Text style={[styles.searchPlaceholder, { color: placeholderColor }]}>Search recommendations...</Text>
       </Pressable>
+      <View style={styles.categorySections}>
+        <CategoryPicksSection sectionTitle="Books" categorySlug="book" />
+        <CategoryPicksSection sectionTitle="TV" categorySlug="tv" />
+      </View>
       <Text style={[styles.sectionTitle, themeStyles.sectionTitle]}>All Picks</Text>
     </View>
   ), [insets.top, themeStyles, searchIconColor, placeholderColor, navigation]);
@@ -122,6 +128,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderWidth: 1,
     borderColor: '#e5e5e5',
+    marginBottom: 28,
   },
   searchIcon: {
     marginRight: 12,
@@ -131,11 +138,14 @@ const styles = StyleSheet.create({
     color: '#999',
     flex: 1,
   },
+  categorySections: {
+    marginBottom: 4,
+  },
   sectionTitle: {
     fontSize: 20,
     fontWeight: '600',
     color: '#1a1a1a',
-    marginTop: 24,
+    marginTop: 8,
     marginBottom: 16,
   },
   centeredState: {
