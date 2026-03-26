@@ -1,6 +1,6 @@
 import { ApiRecommendation } from '../models/recommendation';
 
-const API_BASE_URL = 'http://localhost:8000/api/v1';
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:8000/api/v1';
 
 export const PAGE_SIZE = 50;
 

@@ -1,16 +1,32 @@
 # Current Feature
 
+Deployment
+
 ## Status
 
 <!-- Not Started|In Progress|Completed -->
+
+In Progress
 
 ## Goals
 
 <!-- Goals & requirements -->
 
+- Deploy FastAPI backend to Render and confirm it is publicly accessible
+- Configure all environment variables in Render (database URL, S3 credentials, etc.)
+- Connect Neon Postgres database and confirm migrations have run in production
+- Confirm S3 bucket access works from the deployed backend
+- Update mobile app API base URL to point at the Render deployment
+- Test end-to-end production flow: ingest data → API returns it → mobile app displays it
+
 ## Notes
 
 <!-- Any extra notes -->
+
+- Follow project's simple, low-cost, minimal-ops deployment principles
+- Infrastructure: Render (backend), Neon (Postgres), AWS S3 (media)
+- Environments: local and production only
+- Spec: `docs/execution/sprint-03-discovery-polish/06_deployment.md`
 
 ## History
 
