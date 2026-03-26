@@ -18,9 +18,16 @@
       }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://freshly-picked.onrender.com/api/v1"
+      }
     },
-    "production": {}
+    "production": {
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://freshly-picked.onrender.com/api/v1"
+      }
+    }
   }
 }
 
