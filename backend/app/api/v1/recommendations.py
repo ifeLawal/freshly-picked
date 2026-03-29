@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db import get_session
-from app.repositories.recommendation_repository import get_recommendations
-from app.schemas.recommendation import RecommendationSummary
+from app.repositories.recommendation_repository import get_recommendation_by_id, get_recommendations
+from app.schemas.recommendation import RecommendationDetail, RecommendationSummary
 
 router = APIRouter(prefix="/recommendations", tags=["recommendations"])
 
@@ -21,6 +21,32 @@ def _to_summary(rec) -> RecommendationSummary:
         host=rec.host,
         episode=rec.episode,
         category=rec.category,
+    )
+
+
+@router.get("/{recommendation_id}", response_model=RecommendationDetail)
+async def get_recommendation(
+    recommendation_id: int,
+    session: AsyncSession = Depends(get_session),
+) -> RecommendationDetail:
+    rec = await get_recommendation_by_id(session, recommendation_id)
+    if not rec:
+        raise HTTPException(status_code=404, detail="Recommendation not found")
+    return RecommendationDetail(
+        id=rec.id,
+        slug=rec.slug,
+        title=rec.title,
+        why_recommended=rec.why_recommended,
+        external_url=rec.external_url,
+        image_url=rec.image_url,
+        audio_clip_url=rec.audio_clip_url,
+        audio_start_seconds=rec.audio_start_seconds,
+        audio_end_seconds=rec.audio_end_seconds,
+        has_audio=rec.audio_clip_url is not None,
+        host=rec.host,
+        episode=rec.episode,
+        category=rec.category,
+        tags=rec.tags,
     )
 
 
