@@ -135,7 +135,9 @@ def _upload_media(
     image_url: Optional[str] = None  # will be set if an image is successfully uploaded or already exists in S3
     audio_url: Optional[str] = None  # will be set if an audio file is successfully uploaded
 
-    if record.image_file:  # only attempt upload if the record references an image file
+    # Only upload images that have a directory-prefixed path (e.g. "american_symphony/american_symphony.jpg").
+    # Flat filenames (e.g. "HBR_Presents_Logo_Placeholder.png") are placeholders and should not be uploaded.
+    if record.image_file and "/" in record.image_file:
         # Resolve from {media_dir}/images/ — JSON stores filename only, not a path
         local = media_dir / "images" / record.image_file  # full local path to the image file
         ext = Path(record.image_file).suffix  # preserve original extension (e.g. .jpg, .png) for the S3 key
@@ -176,15 +178,9 @@ async def _upsert_one(
     media_dir: Optional[Path],
     include_media: bool,
     force_media: bool,
+    target_slugs: Optional[set[str]] = None,
 ) -> str:
     ext_id = build_external_source_id(record)
-
-    # Resolve or create supporting entities before touching the recommendation
-    host = await _get_or_create_host(session, record.recommended_by)
-    episode = await _get_or_create_episode(
-        session, record.episode, record.episode_title, record.episode_date
-    )
-    category = await _get_or_create_category(session, record.recommendation_type)
 
     existing = (
         await session.execute(
@@ -193,6 +189,17 @@ async def _upsert_one(
     ).scalar_one_or_none()
 
     if existing:
+        # Check slug filter before any further DB work
+        if target_slugs and existing.slug not in target_slugs:
+            return "skipped"
+
+        # Resolve or create supporting entities now that we know this record will be processed
+        host = await _get_or_create_host(session, record.recommended_by)
+        episode = await _get_or_create_episode(
+            session, record.episode, record.episode_title, record.episode_date
+        )
+        category = await _get_or_create_category(session, record.recommendation_type)
+
         # Update all mutable fields — slug and external_source_id are never changed on update
         existing.title = record.recommendation_name
         existing.external_url = record.recommendation_link
@@ -214,6 +221,18 @@ async def _upsert_one(
 
     # Slug: readable prefix (capped at 60 chars) + first 8 chars of the ID for uniqueness
     rec_slug = f"{_slugify(record.recommendation_name)[:60]}-{ext_id[:8]}"
+
+    # Check slug filter before any further DB work
+    if target_slugs and rec_slug not in target_slugs:
+        return "skipped"
+
+    # Resolve or create supporting entities now that we know this record will be processed
+    host = await _get_or_create_host(session, record.recommended_by)
+    episode = await _get_or_create_episode(
+        session, record.episode, record.episode_title, record.episode_date
+    )
+    category = await _get_or_create_category(session, record.recommendation_type)
+
     image_url, audio_url = None, None
     if not dry_run:
         image_url, audio_url = _upload_media(record, rec_slug, media_dir, include_media, force_media)
@@ -242,17 +261,20 @@ async def _run(
     media_dir: Optional[Path],
     include_media: bool,
     force_media: bool,
+    target_slugs: Optional[set[str]] = None,
 ) -> ImportSummary:
     summary = ImportSummary()
 
     async with AsyncSessionLocal() as session:
         for record in records:
             try:
-                action = await _upsert_one(session, record, dry_run, media_dir, include_media, force_media)
+                action = await _upsert_one(session, record, dry_run, media_dir, include_media, force_media, target_slugs)
                 if action == "created":
                     summary.created += 1
-                else:
+                elif action == "updated":
                     summary.updated += 1
+                else:
+                    summary.skipped += 1
             except Exception as e:
                 # Collect errors per-record so one bad record doesn't abort the whole batch
                 summary.errors.append({"record": record.recommendation_name, "error": str(e)})
@@ -272,6 +294,7 @@ def run_import(
     media_dir: Optional[Path] = None,
     include_media: bool = False,
     force_media: bool = False,
+    target_slugs: Optional[set[str]] = None,
 ) -> ImportSummary:
     # asyncio.run drives the async session from the synchronous CLI entry point
-    return asyncio.run(_run(records, dry_run, media_dir, include_media, force_media))
+    return asyncio.run(_run(records, dry_run, media_dir, include_media, force_media, target_slugs))

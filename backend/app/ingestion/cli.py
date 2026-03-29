@@ -80,6 +80,12 @@ def main() -> None:
         action="store_true",
         help="Re-upload media to S3 even if the key already exists (use to replace updated files)",
     )
+    parser.add_argument(
+        "--slugs",
+        type=str,
+        default=None,
+        help="Comma-separated list of slugs to process; all other records are skipped (useful for targeted re-uploads)",
+    )
     args = parser.parse_args()
     args.file = args.file.resolve()  # absolute path so CWD changes don't affect resolution
 
@@ -119,9 +125,13 @@ def main() -> None:
     # Resolve to absolute path so relative paths survive virtualenv activation changing CWD.
     media_dir = (args.media_dir or args.file.parent.parent).resolve()
 
+    target_slugs = {s.strip() for s in args.slugs.split(",") if s.strip()} if args.slugs else None
+    if target_slugs:
+        print(f"\n{mode}Targeting {len(target_slugs)} slug(s): {', '.join(sorted(target_slugs))}")
+
     print(f"\n{mode}Importing {len(result.valid)} records...")
-    summary = run_import(result.valid, dry_run=args.dry_run, media_dir=media_dir, include_media=args.include_media, force_media=args.force_media)
-    summary.skipped = len(result.invalid)  # invalid records were skipped before import
+    summary = run_import(result.valid, dry_run=args.dry_run, media_dir=media_dir, include_media=args.include_media, force_media=args.force_media, target_slugs=target_slugs)
+    summary.skipped += len(result.invalid)  # invalid records were skipped before import
     _print_summary(summary, dry_run=args.dry_run)
 
     # Exit with a non-zero code if any records errored so CI can catch failures
