@@ -1,16 +1,26 @@
 # Current Feature
 
+Recommendation Detail API
+
 ## Status
 
 <!-- Not Started|In Progress|Completed -->
 
+In Progress
+
 ## Goals
 
 <!-- Goals & requirements -->
+- Create `GET /api/v1/recommendations/{id}` endpoint
+- Return full recommendation metadata: title, `why_recommended`, `external_url`, host, episode, category, tags
+- Include optional media fields: `image_url`, `audio_clip_url`, `audio_start_seconds`, `audio_end_seconds`
+- Response shape validated — consistent structure whether media fields are present or null
 
 ## Notes
 
 <!-- Any extra notes -->
+Spec: `docs/execution/sprint-02-core-product/04_recommendation_detail_api.md`
+Branch: `sprint-02/04_recommendation_detail_api`
 
 ## History
 

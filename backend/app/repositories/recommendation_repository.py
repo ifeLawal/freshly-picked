@@ -12,6 +12,24 @@ from app.models.recommendation_tag import RecommendationTag
 from app.models.tag import Tag
 
 
+async def get_recommendation_by_id(
+    session: AsyncSession,
+    recommendation_id: int,
+) -> Optional[Recommendation]:
+    stmt = (
+        select(Recommendation)
+        .where(Recommendation.id == recommendation_id)
+        .options(
+            selectinload(Recommendation.host),
+            selectinload(Recommendation.episode),
+            selectinload(Recommendation.category),
+            selectinload(Recommendation.tags),
+        )
+    )
+    result = await session.execute(stmt)
+    return result.scalar_one_or_none()
+
+
 async def get_recommendations(
     session: AsyncSession,
     host: Optional[str] = None,
