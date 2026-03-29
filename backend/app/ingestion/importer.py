@@ -126,6 +126,7 @@ def _upload_media(
     slug: str,
     media_dir: Optional[Path],
     include_media: bool,
+    force_media: bool = False,
 ) -> tuple[Optional[str], Optional[str]]:
     # Skip entirely if media uploads are disabled or no media dir was provided
     if not include_media or not media_dir:
@@ -138,14 +139,14 @@ def _upload_media(
         # Resolve from {media_dir}/images/ — JSON stores filename only, not a path
         local = media_dir / "images" / record.image_file  # full local path to the image file
         ext = Path(record.image_file).suffix  # preserve original extension (e.g. .jpg, .png) for the S3 key
-        s3_key = f"images/{slug}{ext}"  # S3 key: images/<slug>.<ext>
+        image_s3_key = f"images/{slug}{ext}"  # S3 key: images/<slug>.<ext>
         try:
-            if key_exists(s3_key):  # check S3 before uploading to avoid redundant transfers
+            if not force_media and key_exists(image_s3_key):
                 # File already in S3 — return the existing URL without re-uploading
-                image_url = build_public_url(s3_key)  # construct the public CDN URL from the existing key
+                image_url = build_public_url(image_s3_key)
                 print(f"  Skipped image upload for {slug!r}: already exists in S3")
             else:
-                image_url = upload_image(str(local), s3_key)  # upload the local file to S3 and return its public URL
+                image_url = upload_image(str(local), image_s3_key)
         except (FileNotFoundError, RuntimeError) as e:
             # Warn but don't abort — a missing media file shouldn't fail the whole import
             print(f"  Warning: image upload skipped for {slug!r}: {e}")
@@ -154,13 +155,14 @@ def _upload_media(
         # Resolve from {media_dir}/audio/ — JSON stores filename only, not a path
         local = media_dir / "audio" / record.audio_file  # full local path to the audio file
         ext = Path(record.audio_file).suffix  # preserve original extension (e.g. .mp3, .m4a) for the S3 key
+        audio_s3_key = f"audio/{slug}{ext}"  # S3 key: audio/<slug>.<ext>
         try:
-            if key_exists(s3_key):  # check S3 before uploading to avoid redundant transfers
-            # File already in S3 — return the existing URL without re-uploading
-                audio_url = build_public_url(s3_key)  # construct the public CDN URL from the existing key
+            if not force_media and key_exists(audio_s3_key):
+                # File already in S3 — return the existing URL without re-uploading
+                audio_url = build_public_url(audio_s3_key)
                 print(f"  Skipped audio upload for {slug!r}: already exists in S3")
             else:
-                audio_url = upload_audio(str(local), f"audio/{slug}{ext}")  # upload to S3 under audio/<slug>.<ext>
+                audio_url = upload_audio(str(local), audio_s3_key)
         except (FileNotFoundError, RuntimeError) as e:
             print(f"  Warning: audio upload skipped for {slug!r}: {e}")  # warn but continue — audio is optional
 
@@ -173,6 +175,7 @@ async def _upsert_one(
     dry_run: bool,
     media_dir: Optional[Path],
     include_media: bool,
+    force_media: bool,
 ) -> str:
     ext_id = build_external_source_id(record)
 
@@ -201,7 +204,7 @@ async def _upsert_one(
         existing.audio_end_seconds = record.audio_end_seconds
 
         if not dry_run:
-            image_url, audio_url = _upload_media(record, existing.slug, media_dir, include_media)
+            image_url, audio_url = _upload_media(record, existing.slug, media_dir, include_media, force_media)
             if image_url:
                 existing.image_url = image_url
             if audio_url:
@@ -213,7 +216,7 @@ async def _upsert_one(
     rec_slug = f"{_slugify(record.recommendation_name)[:60]}-{ext_id[:8]}"
     image_url, audio_url = None, None
     if not dry_run:
-        image_url, audio_url = _upload_media(record, rec_slug, media_dir, include_media)
+        image_url, audio_url = _upload_media(record, rec_slug, media_dir, include_media, force_media)
 
     rec = Recommendation(
         slug=rec_slug,
@@ -238,13 +241,14 @@ async def _run(
     dry_run: bool,
     media_dir: Optional[Path],
     include_media: bool,
+    force_media: bool,
 ) -> ImportSummary:
     summary = ImportSummary()
 
     async with AsyncSessionLocal() as session:
         for record in records:
             try:
-                action = await _upsert_one(session, record, dry_run, media_dir, include_media)
+                action = await _upsert_one(session, record, dry_run, media_dir, include_media, force_media)
                 if action == "created":
                     summary.created += 1
                 else:
@@ -267,6 +271,7 @@ def run_import(
     dry_run: bool = False,
     media_dir: Optional[Path] = None,
     include_media: bool = False,
+    force_media: bool = False,
 ) -> ImportSummary:
     # asyncio.run drives the async session from the synchronous CLI entry point
-    return asyncio.run(_run(records, dry_run, media_dir, include_media))
+    return asyncio.run(_run(records, dry_run, media_dir, include_media, force_media))

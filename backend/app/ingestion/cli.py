@@ -2,7 +2,7 @@
 CLI entry point for ingesting recommendation data from a JSON file.
 
 Usage:
-    freshly-ingest <file> [--dry-run] [--media-dir <dir>] [--include-media]
+    freshly-ingest <file> [--dry-run] [--media-dir <dir>] [--include-media] [--force-media]
 
 Examples:
     freshly-ingest context/data/harvard_after_hours_picks.json --dry-run
@@ -10,6 +10,7 @@ Examples:
     freshly-ingest context/data/harvard_after_hours_picks.json --media-dir context/
     freshly-ingest context/data/harvard_after_hours_picks.json --include-media
     freshly-ingest context/data/harvard_after_hours_picks.json --media-dir context/ --include-media
+    freshly-ingest context/data/harvard_after_hours_picks.json --include-media --force-media
 """
 
 import argparse
@@ -74,6 +75,11 @@ def main() -> None:
         action="store_true",
         help="Upload image and audio files to S3 (skipped by default to keep imports fast)",
     )
+    parser.add_argument(
+        "--force-media",
+        action="store_true",
+        help="Re-upload media to S3 even if the key already exists (use to replace updated files)",
+    )
     args = parser.parse_args()
     args.file = args.file.resolve()  # absolute path so CWD changes don't affect resolution
 
@@ -114,7 +120,7 @@ def main() -> None:
     media_dir = (args.media_dir or args.file.parent.parent).resolve()
 
     print(f"\n{mode}Importing {len(result.valid)} records...")
-    summary = run_import(result.valid, dry_run=args.dry_run, media_dir=media_dir, include_media=args.include_media)
+    summary = run_import(result.valid, dry_run=args.dry_run, media_dir=media_dir, include_media=args.include_media, force_media=args.force_media)
     summary.skipped = len(result.invalid)  # invalid records were skipped before import
     _print_summary(summary, dry_run=args.dry_run)
 
