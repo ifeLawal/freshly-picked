@@ -10,7 +10,7 @@
 
 ## Notes
 
-<!-- Any extra notes -->
+<!-- Any extra notes | branch name sprint-#/<file-name> -->
 
 ## History
 
@@ -33,3 +33,4 @@
 - 2026-03-29: Update AWS Files — added `--force-media` flag to re-upload image/audio to S3 even when key already exists; fixed audio block reusing image s3_key variable; `force_media` threaded through all ingestion layers (`sprint-02/ingestion_upsert_update`)
 - 2026-03-29: Recommendation Detail API — `GET /api/v1/recommendations/{id}` with full metadata including `why_recommended`, `external_url`, tags, and all media fields; `RecommendationDetail` schema added; `get_recommendation_by_id` repository function with eager-loaded host, episode, category, and tags; returns 404 if not found (`sprint-02/04_recommendation_detail_api`)
 - 2026-03-29: Fix file upload — skip image upload for placeholder flat filenames (no `/` in path); only directory-prefixed image_file paths are uploaded to S3; added `--slugs` flag for targeted record re-uploads; deferred host/episode/category DB queries until after slug filter to avoid unnecessary work (`sprint-02/ingestion_refinement`)
+- 2026-03-30: Recommendation Detail Screen — `RecommendationDetailScreen` fetches full detail via `useQuery` from `GET /api/v1/recommendations/{id}`; renders `why_recommended`, tags pills, standalone image, external link via `Linking.openURL`, and audio player; `ApiRecommendationDetail` type and `fetchRecommendationDetail` service added (`sprint-02/05_recommendation_detail_screen`)
