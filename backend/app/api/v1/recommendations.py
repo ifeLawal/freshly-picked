@@ -1,6 +1,6 @@
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Path, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db import get_session
@@ -24,9 +24,14 @@ def _to_summary(rec) -> RecommendationSummary:
     )
 
 
-@router.get("/{recommendation_id}", response_model=RecommendationDetail)
+@router.get(
+    "/{recommendation_id}",
+    response_model=RecommendationDetail,
+    summary="Get recommendation detail",
+    description="Returns the full detail for a single recommendation including why_recommended, external_url, tags, and all media fields.",
+)
 async def get_recommendation(
-    recommendation_id: int,
+    recommendation_id: int = Path(..., description="The ID of the recommendation to retrieve"),
     session: AsyncSession = Depends(get_session),
 ) -> RecommendationDetail:
     rec = await get_recommendation_by_id(session, recommendation_id)
@@ -50,7 +55,12 @@ async def get_recommendation(
     )
 
 
-@router.get("", response_model=list[RecommendationSummary])
+@router.get(
+    "",
+    response_model=list[RecommendationSummary],
+    summary="List recommendations",
+    description="Returns a paginated list of recommendations. Supports filtering by host, category, tag, and episode slug, keyword search, and batch fetch by IDs.",
+)
 async def list_recommendations(
     host: Optional[str] = Query(default=None, description="Filter by host slug"),
     category: Optional[str] = Query(default=None, description="Filter by category slug"),
