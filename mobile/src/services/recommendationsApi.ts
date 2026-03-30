@@ -1,4 +1,4 @@
-import { ApiRecommendation } from '../models/recommendation';
+import { ApiRecommendation, ApiRecommendationDetail } from '../models/recommendation';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:8000/api/v1';
 
@@ -13,5 +13,11 @@ export async function fetchRecommendations(offset: number = 0): Promise<ApiRecom
 export async function fetchRecommendationsByCategory(categorySlug: string, limit: number = 20): Promise<ApiRecommendation[]> {
   const response = await fetch(`${API_BASE_URL}/recommendations?category=${categorySlug}&limit=${limit}&offset=0`);
   if (!response.ok) throw new Error(`Failed to fetch recommendations: ${response.status}`);
+  return response.json();
+}
+
+export async function fetchRecommendationDetail(id: number): Promise<ApiRecommendationDetail> {
+  const response = await fetch(`${API_BASE_URL}/recommendations/${id}`);
+  if (!response.ok) throw new Error(`Failed to fetch recommendation detail: ${response.status}`);
   return response.json();
 }
