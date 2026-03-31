@@ -1,39 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TextInput, Pressable, StyleSheet } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, FlatList, TextInput, Pressable, StyleSheet, ActivityIndicator, ListRenderItem } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useQuery } from '@tanstack/react-query';
 import { MainStackParamList } from '../navigation/types';
-import { recommendations, episodes, categories } from '../data/mockData';
+import { ApiRecommendation } from '../models/recommendation';
 import { RecommendationCard } from '../components/RecommendationCard';
-import { EpisodeCard } from '../components/EpisodeCard';
 import { useFavorites } from '../context/FavoritesContext';
-import { useAudioPlayer } from '../context/AudioPlayerContext';
-import { storage } from '../utils/storage';
+import { useCompleted } from '../context/CompletedContext';
 import { useTheme } from '../context/ThemeContext';
+import { fetchRecommendationsBySearch } from '../services/recommendationsApi';
+import { storage } from '../utils/storage';
 
 type NavigationProp = NativeStackNavigationProp<MainStackParamList>;
 
 export function SearchScreen() {
   const insets = useSafeAreaInsets();
   const [query, setQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const navigation = useNavigation<NavigationProp>();
   const { isDarkMode } = useTheme();
   const { isFavorited, toggleFavorite } = useFavorites();
-  const { playRecommendation } = useAudioPlayer();
+  const { isCompleted, toggleCompleted } = useCompleted();
   const themeStyles = isDarkMode ? darkStyles : ({} as typeof darkStyles);
   const iconColor = isDarkMode ? '#888' : '#999';
   const placeholderColor = isDarkMode ? '#888' : '#999';
 
   useEffect(() => {
-    const loadRecentSearches = async () => {
-      const searches = await storage.getRecentSearches();
-      setRecentSearches(searches);
-    };
-    loadRecentSearches();
+    storage.getRecentSearches().then(setRecentSearches);
   }, []);
+
+  // Debounce query to avoid firing on every keystroke
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedQuery(query.trim()), 300);
+    return () => clearTimeout(timer);
+  }, [query]);
+
+  const { data: results = [], isLoading } = useQuery({
+    queryKey: ['recommendations', 'search', debouncedQuery],
+    queryFn: () => fetchRecommendationsBySearch(debouncedQuery),
+    enabled: debouncedQuery.length > 0,
+  });
 
   const addRecentSearch = async (search: string) => {
     const updated = [search, ...recentSearches.filter(s => s !== search)].slice(0, 5);
@@ -46,173 +56,109 @@ export function SearchScreen() {
     await storage.saveRecentSearches([]);
   };
 
-  const handleSearch = (searchQuery: string) => {
-    setQuery(searchQuery);
-    if (searchQuery.trim()) {
-      addRecentSearch(searchQuery.trim());
-    }
+  const handleChangeText = (text: string) => {
+    setQuery(text);
   };
 
-  const filteredRecommendations = query.trim()
-    ? recommendations.filter(
-        (rec) =>
-          rec.title.toLowerCase().includes(query.toLowerCase()) ||
-          rec.description.toLowerCase().includes(query.toLowerCase()) ||
-          rec.host.toLowerCase().includes(query.toLowerCase()) ||
-          rec.category.toLowerCase().includes(query.toLowerCase())
-      )
-    : [];
-
-  const filteredEpisodes = query.trim()
-    ? episodes.filter(
-        (ep) =>
-          ep.title.toLowerCase().includes(query.toLowerCase()) ||
-          ep.description.toLowerCase().includes(query.toLowerCase())
-      )
-    : [];
-
-  const hosts = Array.from(new Set(recommendations.map(r => r.host)));
-  const filteredHosts = query.trim()
-    ? hosts.filter(host => host.toLowerCase().includes(query.toLowerCase()))
-    : [];
-
-  const handleRecommendationClick = (rec: typeof recommendations[0]) => {
-    navigation.navigate('RecommendationDetail', { recommendation: rec });
+  const handleSubmitEditing = () => {
+    if (query.trim()) addRecentSearch(query.trim());
   };
 
-  const handleEpisodeClick = (ep: typeof episodes[0]) => {
-    navigation.navigate('EpisodeDetail', { episode: ep });
-  };
+  const handleRecommendationClick = useCallback((recommendation: ApiRecommendation) => {
+    navigation.navigate('RecommendationDetail', { recommendation });
+  }, [navigation]);
 
-  const handleCategoryClick = (category: string) => {
-    navigation.navigate('CategoryList', { category });
-  };
+  const renderItem: ListRenderItem<ApiRecommendation> = useCallback(({ item }) => (
+    <RecommendationCard
+      recommendation={item}
+      isFavorited={isFavorited(String(item.id))}
+      isCompleted={isCompleted(String(item.id))}
+      onToggleFavorite={toggleFavorite}
+      onToggleCompleted={toggleCompleted}
+      onClick={handleRecommendationClick}
+    />
+  ), [isFavorited, isCompleted, toggleFavorite, toggleCompleted, handleRecommendationClick]);
+
+  const showResults = debouncedQuery.length > 0;
+
+  const listHeader = (
+    <View style={[styles.header, { paddingTop: insets.top + 24 }, themeStyles.header]}>
+      <Text style={[styles.title, themeStyles.title]}>Search</Text>
+
+      <View style={[styles.searchContainer, themeStyles.searchContainer]}>
+        <Ionicons name="search" size={20} color={iconColor} style={styles.searchIcon} />
+        <TextInput
+          style={[styles.searchInput, themeStyles.searchInput]}
+          value={query}
+          onChangeText={handleChangeText}
+          onSubmitEditing={handleSubmitEditing}
+          placeholder="Search recommendations..."
+          placeholderTextColor={placeholderColor}
+          autoFocus
+          returnKeyType="search"
+        />
+        {query ? (
+          <Pressable onPress={() => setQuery('')} hitSlop={8}>
+            <Ionicons name="close" size={20} color={iconColor} style={styles.clearIcon} />
+          </Pressable>
+        ) : null}
+      </View>
+
+      {!showResults && recentSearches.length > 0 ? (
+        <View style={styles.recentSection}>
+          <View style={styles.recentHeader}>
+            <Text style={[styles.sectionTitle, themeStyles.sectionTitle]}>Recent Searches</Text>
+            <Pressable onPress={clearRecentSearches}>
+              <Text style={styles.clearButton}>Clear</Text>
+            </Pressable>
+          </View>
+          <View style={styles.recentChips}>
+            {recentSearches.map((search, index) => (
+              <Pressable
+                key={index}
+                style={[styles.recentChip, themeStyles.recentChip]}
+                onPress={() => setQuery(search)}
+              >
+                <Text style={[styles.recentChipText, themeStyles.recentChipText]}>{search}</Text>
+              </Pressable>
+            ))}
+          </View>
+        </View>
+      ) : null}
+
+      {showResults && !isLoading ? (
+        <Text style={[styles.resultsCount, themeStyles.resultsCount]}>
+          {results.length} {results.length === 1 ? 'result' : 'results'} for "{debouncedQuery}"
+        </Text>
+      ) : null}
+    </View>
+  );
+
+  const listEmpty = showResults ? (
+    isLoading ? (
+      <View style={styles.centeredState}>
+        <ActivityIndicator size="large" color="#4689F3" />
+      </View>
+    ) : (
+      <View style={styles.emptyState}>
+        <Ionicons name="search-outline" size={64} color={iconColor} style={styles.emptyIcon} />
+        <Text style={[styles.emptyText, themeStyles.emptyText]}>No results for "{debouncedQuery}"</Text>
+        <Text style={[styles.emptySubtext, themeStyles.emptySubtext]}>Try a different keyword</Text>
+      </View>
+    )
+  ) : null;
 
   return (
-    <ScrollView style={[styles.container, themeStyles.container]} contentContainerStyle={styles.content}>
-      <View style={[styles.header, { paddingTop: insets.top + 24 }, themeStyles.header]}>
-        <Text style={[styles.title, themeStyles.title]}>Search</Text>
-
-        <View style={[styles.searchContainer, themeStyles.searchContainer]}>
-          <Ionicons name="search" size={20} color={iconColor} style={styles.searchIcon} />
-          <TextInput
-            style={[styles.searchInput, themeStyles.searchInput]}
-            value={query}
-            onChangeText={handleSearch}
-            placeholder="Search recommendations, hosts, episodes..."
-            placeholderTextColor={placeholderColor}
-            autoFocus
-          />
-          {query ? (
-            <Pressable onPress={() => setQuery('')} hitSlop={8}>
-              <Ionicons name="close" size={20} color={iconColor} style={styles.clearIcon} />
-            </Pressable>
-          ) : null}
-        </View>
-      </View>
-
-      <View style={styles.results}>
-        {!query.trim() ? (
-          <>
-            {recentSearches.length > 0 && (
-              <View style={styles.section}>
-                <View style={styles.sectionHeader}>
-                  <Text style={[styles.sectionTitle, themeStyles.sectionTitle]}>Recent Searches</Text>
-                  <Pressable onPress={clearRecentSearches}>
-                    <Text style={styles.clearButton}>Clear</Text>
-                  </Pressable>
-                </View>
-                <View style={styles.recentSearches}>
-                  {recentSearches.map((search, index) => (
-                    <Pressable
-                      key={index}
-                      style={[styles.recentSearchChip, themeStyles.recentSearchChip]}
-                      onPress={() => setQuery(search)}
-                    >
-                      <Text style={[styles.recentSearchText, themeStyles.recentSearchText]}>{search}</Text>
-                    </Pressable>
-                  ))}
-                </View>
-              </View>
-            )}
-
-            <View style={styles.section}>
-              <Text style={[styles.sectionTitle, themeStyles.sectionTitle]}>Browse Categories</Text>
-              <View style={styles.categoriesGrid}>
-                {categories.map((category) => (
-                  <Pressable
-                    key={category.name}
-                    style={[styles.categoryCard, themeStyles.categoryCard]}
-                    onPress={() => handleCategoryClick(category.name)}
-                  >
-                    <Ionicons name={category.icon as keyof typeof Ionicons.glyphMap} size={28} color="#4689F3" style={styles.categoryIcon} />
-                    <Text style={[styles.categoryName, themeStyles.categoryName]}>{category.name}</Text>
-                    <Text style={[styles.categoryCount, themeStyles.categoryCount]}>{category.count} picks</Text>
-                  </Pressable>
-                ))}
-              </View>
-            </View>
-          </>
-        ) : (
-          <>
-            {filteredRecommendations.length === 0 && filteredEpisodes.length === 0 && filteredHosts.length === 0 ? (
-              <View style={styles.emptyState}>
-                <Ionicons name="search-outline" size={64} color={iconColor} style={styles.emptyIcon} />
-                <Text style={[styles.emptyText, themeStyles.emptyText]}>No results found for "{query}"</Text>
-                <Text style={[styles.emptySubtext, themeStyles.emptySubtext]}>Try searching for a book, restaurant, or host name</Text>
-              </View>
-            ) : (
-              <>
-                {filteredRecommendations.length > 0 && (
-                  <View style={styles.section}>
-                    <Text style={[styles.sectionTitle, themeStyles.sectionTitle]}>
-                      Recommendations ({filteredRecommendations.length})
-                    </Text>
-                    {filteredRecommendations.map((rec) => (
-                      <RecommendationCard
-                        key={rec.id}
-                        recommendation={rec}
-                        isFavorited={isFavorited(rec.id)}
-                        onToggleFavorite={toggleFavorite}
-                        onPlay={playRecommendation}
-                        onClick={handleRecommendationClick}
-                      />
-                    ))}
-                  </View>
-                )}
-
-                {filteredEpisodes.length > 0 && (
-                  <View style={styles.section}>
-                    <Text style={[styles.sectionTitle, themeStyles.sectionTitle]}>Episodes ({filteredEpisodes.length})</Text>
-                    {filteredEpisodes.map((ep) => (
-                      <EpisodeCard key={ep.id} episode={ep} onClick={handleEpisodeClick} />
-                    ))}
-                  </View>
-                )}
-
-                {filteredHosts.length > 0 && (
-                  <View style={styles.section}>
-                    <Text style={[styles.sectionTitle, themeStyles.sectionTitle]}>Hosts ({filteredHosts.length})</Text>
-                    {filteredHosts.map((host) => (
-                      <Pressable
-                        key={host}
-                        style={[styles.hostCard, themeStyles.hostCard]}
-                        onPress={() => setQuery(host)}
-                      >
-                        <Text style={[styles.hostName, themeStyles.hostName]}>{host}</Text>
-                        <Text style={[styles.hostCount, themeStyles.hostCount]}>
-                          {recommendations.filter(r => r.host === host).length} recommendations
-                        </Text>
-                      </Pressable>
-                    ))}
-                  </View>
-                )}
-              </>
-            )}
-          </>
-        )}
-      </View>
-    </ScrollView>
+    <FlatList
+      style={[styles.container, themeStyles.container]}
+      contentContainerStyle={styles.content}
+      data={showResults ? results : []}
+      keyExtractor={(item) => String(item.id)}
+      renderItem={renderItem}
+      ListHeaderComponent={listHeader}
+      ListEmptyComponent={listEmpty}
+      keyboardShouldPersistTaps="handled"
+    />
   );
 }
 
@@ -222,11 +168,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   content: {
+    paddingHorizontal: 24,
     paddingBottom: 120,
   },
   header: {
-    paddingHorizontal: 24,
-    paddingBottom: 24,
+    paddingBottom: 8,
     backgroundColor: '#f5f5f5',
   },
   title: {
@@ -243,6 +189,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderWidth: 1,
     borderColor: '#e5e5e5',
+    marginBottom: 16,
   },
   searchIcon: {
     marginRight: 12,
@@ -256,35 +203,31 @@ const styles = StyleSheet.create({
   clearIcon: {
     padding: 4,
   },
-  results: {
-    paddingHorizontal: 24,
+  recentSection: {
+    marginBottom: 8,
   },
-  section: {
-    marginBottom: 32,
-  },
-  sectionHeader: {
+  recentHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 12,
   },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '600',
     color: '#1a1a1a',
-    marginBottom: 16,
   },
   clearButton: {
     fontSize: 14,
     color: '#4689F3',
     fontWeight: '500',
   },
-  recentSearches: {
+  recentChips: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
   },
-  recentSearchChip: {
+  recentChip: {
     backgroundColor: 'white',
     paddingHorizontal: 16,
     paddingVertical: 8,
@@ -292,60 +235,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e5e5e5',
   },
-  recentSearchText: {
+  recentChipText: {
     fontSize: 14,
     color: '#1a1a1a',
   },
-  categoriesGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
+  resultsCount: {
+    fontSize: 14,
+    color: '#999',
+    marginBottom: 8,
   },
-  categoryCard: {
-    backgroundColor: 'white',
-    borderRadius: 12,
-    padding: 16,
-    width: '47%',
+  centeredState: {
+    paddingVertical: 48,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
-  },
-  categoryIcon: {
-    marginBottom: 8,
-  },
-  categoryName: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#1a1a1a',
-    marginBottom: 4,
-  },
-  categoryCount: {
-    fontSize: 12,
-    color: '#999',
-  },
-  hostCard: {
-    backgroundColor: 'white',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
-  },
-  hostName: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#1a1a1a',
-    marginBottom: 4,
-  },
-  hostCount: {
-    fontSize: 14,
-    color: '#999',
   },
   emptyState: {
     alignItems: 'center',
@@ -375,15 +276,9 @@ const darkStyles = StyleSheet.create({
   searchContainer: { backgroundColor: '#1e1e1e', borderColor: '#333' },
   searchInput: { color: '#e5e5e5' },
   sectionTitle: { color: '#e5e5e5' },
-  recentSearchChip: { backgroundColor: '#1e1e1e', borderColor: '#333' },
-  recentSearchText: { color: '#e5e5e5' },
-  categoryCard: { backgroundColor: '#1e1e1e' },
-  categoryName: { color: '#e5e5e5' },
-  categoryCount: { color: '#888' },
-  hostCard: { backgroundColor: '#1e1e1e' },
-  hostName: { color: '#e5e5e5' },
-  hostCount: { color: '#888' },
+  recentChip: { backgroundColor: '#1e1e1e', borderColor: '#333' },
+  recentChipText: { color: '#e5e5e5' },
+  resultsCount: { color: '#666' },
   emptyText: { color: '#e5e5e5' },
   emptySubtext: { color: '#888' },
 });
-

@@ -21,3 +21,9 @@ export async function fetchRecommendationDetail(id: number): Promise<ApiRecommen
   if (!response.ok) throw new Error(`Failed to fetch recommendation detail: ${response.status}`);
   return response.json();
 }
+
+export async function fetchRecommendationsBySearch(search: string): Promise<ApiRecommendation[]> {
+  const response = await fetch(`${API_BASE_URL}/recommendations?search=${encodeURIComponent(search)}&limit=50`);
+  if (!response.ok) throw new Error(`Failed to search recommendations: ${response.status}`);
+  return response.json();
+}
