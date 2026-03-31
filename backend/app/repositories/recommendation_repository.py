@@ -12,6 +12,23 @@ from app.models.recommendation_tag import RecommendationTag
 from app.models.tag import Tag
 
 
+async def get_recommendations_by_episode_id(
+    session: AsyncSession,
+    episode_id: int,
+) -> list[Recommendation]:
+    stmt = (
+        select(Recommendation)
+        .where(Recommendation.episode_id == episode_id)
+        .options(
+            selectinload(Recommendation.host),
+            selectinload(Recommendation.episode),
+            selectinload(Recommendation.category),
+        )
+    )
+    result = await session.execute(stmt)
+    return list(result.scalars().all())
+
+
 async def get_recommendation_by_id(
     session: AsyncSession,
     recommendation_id: int,
